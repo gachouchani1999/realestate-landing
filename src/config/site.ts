@@ -6,7 +6,12 @@ export const site = {
   tagline: "Your Partner from A to Z",
   description:
     "Propora turns UAE property into hands-free income for global owners — handover, furnishing, long-term or holiday-home management, and help buying or selling when the time is right.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  // Canonical and Open Graph URLs. On Vercel this falls back to the project's production domain automatically.
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"),
   email: "hello@propora.ae", // placeholder
   whatsapp: "971500000000", // placeholder — international format, digits only
   phoneDisplay: "+971 50 000 0000", // placeholder
