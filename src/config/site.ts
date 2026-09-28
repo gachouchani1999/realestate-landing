@@ -1,3 +1,20 @@
+/**
+ * Canonical site URL for metadata and Open Graph. Uses NEXT_PUBLIC_SITE_URL, then Vercel's production domain,
+ * then localhost. Blank or malformed values are skipped, and a missing protocol is assumed to be https.
+ */
+function resolveSiteUrl() {
+  for (const raw of [process.env.NEXT_PUBLIC_SITE_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL]) {
+    const value = raw?.trim();
+    if (!value) continue;
+    try {
+      return new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`).origin;
+    } catch {
+      console.warn(`[site] Ignoring invalid site URL: "${value}"`);
+    }
+  }
+  return "http://localhost:3000";
+}
+
 // Business details used across the landing page.
 // TODO(before launch): replace the placeholder contact details below.
 export const site = {
@@ -6,12 +23,7 @@ export const site = {
   tagline: "Your Partner from A to Z",
   description:
     "Propora turns UAE property into hands-free income for global owners — handover, furnishing, long-term or holiday-home management, and help buying or selling when the time is right.",
-  // Canonical and Open Graph URLs. On Vercel this falls back to the project's production domain automatically.
-  url:
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "http://localhost:3000"),
+  url: resolveSiteUrl(),
   email: "hello@propora.ae", // placeholder
   whatsapp: "971500000000", // placeholder — international format, digits only
   phoneDisplay: "+971 50 000 0000", // placeholder
