@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest-950: #111a15;
+  --color-forest: #1b2821;
+  --color-forest-800: #243329;
+  --color-forest-700: #304236;
+  --color-sage: #c8d1cd;
+  --color-sage-300: #b5c0bb;
+  --color-sage-100: #dde3e0;
+  --color-mist: #eaeeeb;
+  --color-charcoal: #242926;
+  --color-charcoal-700: #3a403c;
+  --color-slate: #59635e;
+  --color-line: #d3dad6;
+  --color-olive: #a4a678;
+  --color-olive-300: #c3c5a1;
+  --color-olive-600: #7d8052;
+  --color-olive-800: #5b5e36;
+
+  /* Chart series — validated for CVD separation and contrast (dark = on forest-800, light = on white). */
+  --color-series-rent: #979031;
+  --color-series-growth: #3e8ec1;
+  --color-series-rent-light: #7e7719;
+  --color-series-growth-light: #2d74aa;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-step-in: step-in 0.5s var(--ease-out-expo) both;
+  --animate-float: float 7s ease-in-out infinite;
+
+  @keyframes step-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+}
+
+@utility wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 90rem;
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+  @media (width >= 80rem) {
+    padding-inline: 3rem;
+  }
+}
+
+/* Uppercase editorial serif used for every headline. */
+@utility headline {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: -0.012em;
+  line-height: 0.96;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--color-mist);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-olive);
+    color: var(--color-charcoal);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-olive-600);
+    outline-offset: 3px;
+  }
+}
+
+/*
+ * Motion: `js` is set by an inline script before first paint, so animated elements never flash.
+ * GSAP reveals them; if it never initialises, the head script removes `js` and everything shows.
+ */
+.js [data-reveal],
+.js [data-split],
+.js [data-hero] {
+  visibility: hidden;
+}
+
+/* Twinkling pixels — cheap, CSS-only, runs after the GSAP entrance. */
+.px-twinkle {
+  animation: px-twinkle var(--tw-dur, 4s) ease-in-out var(--tw-delay, 0s) infinite;
+}
+@keyframes px-twinkle {
+  0%, 100% { opacity: var(--tw-from, 1); }
+  50% { opacity: var(--tw-to, 0.15); }
+}
+
+.window-glow {
+  animation: window-glow var(--tw-dur, 5s) ease-in-out var(--tw-delay, 0s) infinite;
+}
+@keyframes window-glow {
+  0%, 100% { opacity: 0.15; }
+  40%, 60% { opacity: 0.95; }
+}
+
+/* Highlight the lead form when a CTA jumps to it. */
+#get-report:target {
+  animation: target-ring 1.6s var(--ease-out-expo);
+}
+@keyframes target-ring {
+  0% { box-shadow: 0 0 0 0 rgb(164 166 120 / 0.9); }
+  100% { box-shadow: 0 0 0 20px rgb(164 166 120 / 0); }
+}
+
+/* Range sliders (ROI calculator) */
+.range {
+  --fill: 50%;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-charcoal) var(--fill), var(--color-sage-100) var(--fill));
+  cursor: pointer;
+}
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #fff;
+  border: 2px solid var(--color-charcoal);
+  box-shadow: 0 4px 12px -2px rgb(36 41 38 / 0.35);
+  transition: transform 0.2s var(--ease-out-expo);
+}
+.range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: #fff;
+  border: 2px solid var(--color-charcoal);
+}
+.range:hover::-webkit-slider-thumb,
+.range:focus-visible::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+.range:focus-visible {
+  outline-offset: 8px;
+}
+
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-twinkle,
+  .window-glow {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
