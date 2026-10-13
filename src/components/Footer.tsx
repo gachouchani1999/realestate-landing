@@ -1,4 +1,5 @@
 import { Mail, MapPin, MessageCircle } from "lucide-react";
+import { CookieSettingsButton } from "@/components/analytics/CookieBanner";
 import { Logo } from "@/components/Logo";
 import { site, whatsappLink } from "@/config/site";
 
@@ -77,8 +78,11 @@ export function Footer() {
             tax advice. Property values can go down as well as up, and past performance is not a guide to future
             returns.
           </p>
-          <p className="pt-2 text-white/50">
-            © {new Date().getFullYear()} {site.name}. All rights reserved.
+          <p className="flex flex-wrap gap-x-4 gap-y-1 pt-2 text-white/50">
+            <span>
+              © {new Date().getFullYear()} {site.name}. All rights reserved.
+            </span>
+            <CookieSettingsButton className="underline-offset-4 transition-colors hover:text-white hover:underline" />
           </p>
         </div>
       </div>

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Inter_Tight, Newsreader } from "next/font/google";
+import { Analytics } from "@/components/analytics/Analytics";
+import { CookieBanner } from "@/components/analytics/CookieBanner";
 import { site } from "@/config/site";
 import "./globals.css";
 
@@ -47,7 +49,11 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <head>
         <script dangerouslySetInnerHTML={{ __html: motionGuard }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookieBanner />
+        <Analytics />
+      </body>
     </html>
   );
 }

@@ -35,6 +35,8 @@ export const site = {
   // TODO(before launch): legal details shown in the footer and team section.
   legalName: "[Company legal name]",
   licence: "IT licence no. [number]",
+  /** Google Analytics 4 measurement ID. Loads only in production and only after cookie consent. */
+  gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-V387M4WQX6",
 } as const;
 
 /** Where "Book a call" goes: the booking page if set, otherwise WhatsApp with a ready-made message. */

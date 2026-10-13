@@ -70,7 +70,12 @@ what they want to track (`interests`), emirate, community, contact
 details, UTM parameters, and a one-line `summary` (e.g. "I'm getting my keys · 2 bedrooms · Within 3 months ·
 Dubai Marina") that is handy for email alerts, sheets and CRMs. A hidden honeypot field and a light per-IP rate limit filter basic spam.
 
-Conversion events (`lead_flow_open`, `lead_flow_step`, `lead_form_start`, `generate_lead`, `calculator_used`, `calculator_strategy`, `whatsapp_click`) are pushed to `window.dataLayer` / `gtag` when Google Tag Manager or GA4 is installed.
+**Analytics & cookies.** Google Analytics 4 (`G-V387M4WQX6`, set in `src/config/site.ts`) loads only in production
+builds and only after the visitor clicks **Accept** on the cookie banner; declining (now or later via "Cookie
+settings" in the footer) keeps it off and clears `_ga` cookies. Code: `src/components/analytics/`, `src/lib/consent.ts`.
+In GA4, mark `generate_lead` and `book_call_click` as key events.
+
+Conversion events (`lead_flow_open`, `lead_flow_step`, `lead_form_start`, `generate_lead`, `calculator_used`, `calculator_strategy`, `book_call_click`, `whatsapp_click`) are pushed to `window.dataLayer` / `gtag` when Google Tag Manager or GA4 is installed.
 
 See `.env.example` for all environment variables.
 
