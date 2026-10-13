@@ -5,7 +5,6 @@ import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/hero/Hero";
 import { Journey } from "@/components/Journey";
 import { LeadFlowProvider } from "@/components/lead-flow/LeadFlowProvider";
-import { Founders } from "@/components/Founders";
 import { Pillars } from "@/components/Pillars";
 import { MotionRoot } from "@/components/motion/MotionRoot";
 import { Nav } from "@/components/Nav";
@@ -59,7 +58,6 @@ export default function Home() {
             <Journey />
             <ReportSection />
             <RoiCalculator />
-            <Founders />
             <Faq />
             <FinalCta />
           </main>

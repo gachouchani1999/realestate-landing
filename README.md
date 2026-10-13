@@ -18,8 +18,8 @@ pnpm build && pnpm start
 
 | What | Where |
 | --- | --- |
-| Contact details, WhatsApp, booking link (`bookingUrl`), legal name, licence no. | `src/config/site.ts` |
-| Page copy (pillars, comparison, dashboard features, stages, how it works, report, team, FAQ…) | `src/content/landing.ts` |
+| Contact details, WhatsApp, booking link (`bookingUrl`) | `src/config/site.ts` |
+| Page copy (pillars, comparison, dashboard features, stages, how it works, report, FAQ…) | `src/content/landing.ts` |
 | Lead form paths, questions, report offers per intent | `src/lib/leads.ts` (`INTENTS`, `DETAIL_QUESTIONS`, `EMIRATES`, `INTERESTS`, `OFFERS`) |
 | Hero email capture | `src/components/LeadForm.tsx` |
 | Full-screen, one-question-at-a-time form | `src/components/lead-flow/LeadFlow.tsx` (opened via `LeadFlowProvider`) |
@@ -81,9 +81,8 @@ See `.env.example` for all environment variables.
 
 ## Before launch
 
-- Replace the placeholder email, WhatsApp number, phone, legal name and licence number in `src/config/site.ts`, and
+- Replace the placeholder WhatsApp number and phone in `src/config/site.ts`, and
   add a `bookingUrl` (Calendly / Cal.com) if you want calls booked on a calendar instead of WhatsApp.
-- Add the founders' names, roles, bios and photos (`team` in `src/content/landing.ts`, photos in `public/team/`).
 - Confirm the market facts, services, fee descriptions, FAQ answers and estimate contents in `src/content/landing.ts`.
 - Check the calculator presets match your real long-term and holiday-home numbers.
 - Make sure you hold the licences each service needs (RERA for brokerage and leasing, DET for holiday homes).

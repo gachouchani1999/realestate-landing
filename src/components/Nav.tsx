@@ -14,7 +14,6 @@ const links = [
   { href: "#product", label: "The dashboard" },
   { href: "#how", label: "How it works" },
   { href: "#report", label: "Free report" },
-  { href: "#team", label: "Who we are" },
   { href: "#faq", label: "FAQ" },
 ];
 

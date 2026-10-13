@@ -156,12 +156,6 @@ export const reportContents = [
 export const reportSmallPrint =
   "Rental outlook prepared with our RERA-licensed leasing partner. Value trend based on public Dubai Land Department transaction data. Not a formal valuation.";
 
-/** The people behind Baytouna. TODO(before launch): real names, roles, one-line bios and photos (/public/team/…). */
-export const team = [
-  { name: "Founder name", role: "Co-founder · Owner experience", bio: "One line about you and why you started Baytouna.", photo: "" },
-  { name: "Founder name", role: "Co-founder · Product", bio: "One line about you and what you're building.", photo: "" },
-];
-
 export const faqs = [
   {
     q: "What is Baytouna?",

@@ -24,7 +24,7 @@ export const site = {
   description:
     "Baytouna is the one-stop shop for UAE property owners: one team and one dashboard, with licensed specialists handling snagging, furnishing, tenants, maintenance and sales. Get a free property report for your unit.",
   url: resolveSiteUrl(),
-  email: "hello@baytouna.ae", // placeholder — confirm this mailbox exists
+  email: "hello@baytouna.ae",
   whatsapp: "971500000000", // placeholder — international format, digits only
   phoneDisplay: "+971 50 000 0000", // placeholder
   location: "Dubai, United Arab Emirates",
@@ -32,9 +32,6 @@ export const site = {
   reportTurnaround: "48 hours",
   /** Calendly / Cal.com link for booking the report walkthrough call. Leave empty to book via WhatsApp. */
   bookingUrl: "",
-  // TODO(before launch): legal details shown in the footer and team section.
-  legalName: "[Company legal name]",
-  licence: "IT licence no. [number]",
   /** Google Analytics 4 measurement ID. Loads only in production and only after cookie consent. */
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-V387M4WQX6",
 } as const;
