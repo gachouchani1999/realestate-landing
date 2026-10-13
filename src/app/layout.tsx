@@ -15,7 +15,7 @@ const newsreader = Newsreader({
   axes: ["opsz"],
 });
 
-const title = `${site.name} — ${site.tagline} in UAE Real Estate`;
+const title = `${site.name} — The owner dashboard for UAE property, from A to Z`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

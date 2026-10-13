@@ -3,11 +3,11 @@ import { Logo } from "@/components/Logo";
 import { site, whatsappLink } from "@/config/site";
 
 const explore = [
-  { href: "#services", label: "Services" },
-  { href: "#journey", label: "A to Z journey" },
-  { href: "#platform", label: "Owner platform" },
-  { href: "#calculator", label: "Earnings calculator" },
-  { href: "#estimate", label: "Free estimate" },
+  { href: "#product", label: "The dashboard" },
+  { href: "#how", label: "How it works" },
+  { href: "#report", label: "Free report" },
+  { href: "#calculator", label: "Income estimate" },
+  { href: "#team", label: "Who we are" },
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -25,8 +25,8 @@ export function Footer() {
               — &ldquo;our home&rdquo;
             </p>
             <p className="mt-5 max-w-sm text-sm leading-relaxed">
-              {site.tagline}. Handover, furnishing, long-term and holiday-home management for global owners of UAE
-              property — and help buying or selling when the time is right.
+              {site.tagline}. The one-stop shop for UAE property owners — one team, one dashboard, and licensed
+              specialists for everything your property needs.
             </p>
           </div>
           <div>
@@ -68,8 +68,9 @@ export function Footer() {
 
         <div className="space-y-4 pt-8 text-xs leading-relaxed text-white/40">
           <p>
-            ¹ Indicative range based on published market data. Yields vary by community, unit type and letting
-            strategy. Figures on this page are illustrative and may change.
+            Snagging, furnishing, leasing, property management, holiday-home letting, maintenance, sales and valuations
+            are delivered by independent, licensed partners and coordinated by Baytouna. {site.name} is operated by{" "}
+            {site.legalName}, {site.licence}. Dashboard previews show sample data; figures on this page are illustrative.
           </p>
           <p>
             The information on this website is for general guidance only and does not constitute financial, legal or

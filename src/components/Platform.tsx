@@ -1,4 +1,13 @@
-import { BellRing, FolderLock, Globe, LayoutDashboard, UserRound, type LucideIcon } from "lucide-react";
+import {
+  BellRing,
+  ClipboardCheck,
+  FolderLock,
+  Receipt,
+  TrendingUp,
+  Wallet,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
 import { LogoMark } from "@/components/Logo";
 import { PixelArt } from "@/components/pixels/PixelArt";
 import { LightBars, SectionHeading } from "@/components/ui";
@@ -6,10 +15,12 @@ import { platformFeatures } from "@/content/landing";
 import { cornerScatter } from "@/lib/pixels";
 
 const icons: Record<(typeof platformFeatures)[number]["icon"], LucideIcon> = {
-  dashboard: LayoutDashboard,
-  advisor: UserRound,
+  handover: ClipboardCheck,
   vault: FolderLock,
-  remote: Globe,
+  payments: Receipt,
+  rent: Wallet,
+  maintenance: Wrench,
+  value: TrendingUp,
 };
 
 const sectionPixels = cornerScatter({
@@ -30,7 +41,7 @@ const bars = [
 
 export function Platform() {
   return (
-    <section id="platform" className="relative isolate scroll-mt-16 overflow-hidden bg-forest py-24 text-white sm:py-36">
+    <section id="product" className="relative isolate scroll-mt-16 overflow-hidden bg-forest py-24 text-white sm:py-36">
       <PixelArt
         reveal
         pixels={sectionPixels}
@@ -42,15 +53,15 @@ export function Platform() {
         <div>
           <SectionHeading
             tone="dark"
-            eyebrow="The Baytouna platform"
+            eyebrow="The owner dashboard"
             title={
               <>
-                Next&#8209;gen platform. <span className="accent">Old&#8209;school accountability</span>
+                Everything about your property, <span className="accent">in one place</span>
               </>
             }
-            sub="See every dirham your property earns and spends — and reach a real person whenever you need one."
+            sub="Handover, paperwork, payments, upkeep and rent — always up to date, wherever you live."
           />
-          <ul className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2">
+          <ul className="mt-14 grid gap-x-8 gap-y-9 sm:grid-cols-2">
             {platformFeatures.map((feature) => {
               const Icon = icons[feature.icon];
               return (
@@ -70,14 +81,17 @@ export function Platform() {
           <div data-bars className="absolute top-[12%] -right-[20%] bottom-[8%] -left-[30%] -z-10">
             <LightBars bars={bars} tone="dark" className="inset-0" />
           </div>
+          <span className="absolute -top-3 left-6 z-10 rounded-md bg-olive px-2.5 py-1 text-[11px] font-medium tracking-[0.08em] text-charcoal uppercase">
+            Sample data
+          </span>
           <DashboardMock />
           <div className="absolute -bottom-7 left-4 flex animate-float items-center gap-3 rounded-xl bg-charcoal py-3.5 pr-5 pl-3.5 text-white shadow-[0_24px_60px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10 sm:-left-8">
             <span className="grid h-10 w-10 place-items-center rounded-lg bg-olive text-charcoal">
               <BellRing className="h-5 w-5" strokeWidth={1.75} />
             </span>
             <span>
-              <span className="block text-sm font-medium">Rent received · AED 9,200</span>
-              <span className="block text-xs text-white/55">Dubai Marina 1BR · just now</span>
+              <span className="block text-sm font-medium">Snag fixed · 3 photos added</span>
+              <span className="block text-xs text-white/55">Dubai Hills 2BR · just now</span>
             </span>
           </div>
         </div>
@@ -86,15 +100,15 @@ export function Platform() {
   );
 }
 
-const portfolio = [4.45, 4.47, 4.46, 4.52, 4.55, 4.58, 4.57, 4.63, 4.68, 4.71, 4.76, 4.82];
-const months = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
+const portfolio = [1.527, 1.531, 1.529, 1.54, 1.548, 1.556, 1.553, 1.571, 1.584, 1.596, 1.607, 1.62];
+const months = ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"];
 
 function PortfolioChart() {
   const W = 600;
   const H = 170;
   const pad = { top: 14, right: 74, bottom: 26, left: 4 };
-  const min = 4.4;
-  const max = 4.85;
+  const min = 1.5;
+  const max = 1.64;
   const x = (i: number) => pad.left + (i / (portfolio.length - 1)) * (W - pad.left - pad.right);
   const y = (v: number) => pad.top + (1 - (v - min) / (max - min)) * (H - pad.top - pad.bottom);
   const line = portfolio.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
@@ -104,7 +118,7 @@ function PortfolioChart() {
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full">
-      {[4.5, 4.65, 4.8].map((v) => (
+      {[1.54, 1.58, 1.62].map((v) => (
         <line key={v} x1={pad.left} x2={W - pad.right} y1={y(v)} y2={y(v)} stroke="#e6ebe8" strokeWidth="1" />
       ))}
       <line x1={pad.left} x2={W - pad.right} y1={baseline} y2={baseline} stroke="#cfd7d3" strokeWidth="1" />
@@ -120,7 +134,7 @@ function PortfolioChart() {
       <circle cx={x(last)} cy={y(portfolio[last])} r="6" fill="#fff" />
       <circle cx={x(last)} cy={y(portfolio[last])} r="4" fill="var(--color-series-rent-light)" />
       <text x={x(last) + 12} y={y(portfolio[last]) + 4} fontSize="13" fontWeight="600" fill="#242926">
-        4.82M
+        1.62M
       </text>
       {months.map((m, i) =>
         i % 3 === 0 || i === last ? (
@@ -134,39 +148,39 @@ function PortfolioChart() {
 }
 
 const kpis = [
-  { label: "Portfolio value", value: "AED 4.82M", delta: "▲ 8.3% YoY" },
-  { label: "Rent collected YTD", value: "AED 214.6K", delta: "▲ 11% vs plan" },
-  { label: "Occupancy", value: "96%", delta: "3 of 3 earning" },
-  { label: "Net yield", value: "6.9%", delta: "After all costs" },
+  { label: "Handover", value: "4 of 6 steps", note: "2 snags open" },
+  { label: "Next payment", value: "AED 9,840", note: "Service charge · 12 Nov" },
+  { label: "Rent this year", value: "AED 72,000", note: "10 of 10 on time" },
+  { label: "Est. value", value: "AED 1.62M", note: "▲ 6.1% in 12 months" },
 ];
 
 const properties = [
-  { name: "Dubai Marina · 1BR", status: "Leased", tone: "bg-emerald-50 text-emerald-700", meta: "AED 9,200 / mo" },
-  { name: "Downtown · Studio", status: "Holiday home", tone: "bg-sky-50 text-sky-700", meta: "88% booked" },
-  { name: "Dubai Hills · 2BR", status: "Off-plan", tone: "bg-amber-50 text-amber-700", meta: "Handover Q2 ’27" },
+  { name: "Dubai Marina · 1BR", status: "Rented", tone: "bg-emerald-50 text-emerald-700", meta: "AED 7,200 / mo" },
+  { name: "Dubai Hills · 2BR", status: "Handover", tone: "bg-amber-50 text-amber-700", meta: "Step 4 of 6" },
+  { name: "JVC · Studio", status: "Furnishing", tone: "bg-sky-50 text-sky-700", meta: "Install 18 Nov" },
 ];
 
 const activity = [
-  { title: "Rent received", meta: "Marina 1BR", time: "2h" },
-  { title: "Ejari renewed", meta: "12-month lease", time: "1d" },
-  { title: "AC service done", meta: "Downtown studio", time: "3d" },
+  { title: "Snag fixed", meta: "Bathroom grout · 3 photos", time: "2h" },
+  { title: "Reminder", meta: "Service charge in 14 days", time: "1d" },
+  { title: "Rent received", meta: "Marina 1BR · AED 7,200", time: "3d" },
 ];
 
 /** Illustrative preview of the owner dashboard. Decorative, so hidden from assistive tech. */
 function DashboardMock() {
   return (
     <figure className="rounded-[30px] bg-white p-2 shadow-[0_50px_120px_-40px_rgb(0_0_0/0.6)]">
-      <figcaption className="sr-only">Preview of the Baytouna owner dashboard</figcaption>
+      <figcaption className="sr-only">Preview of the Baytouna owner dashboard, with sample data</figcaption>
       <div aria-hidden className="overflow-hidden rounded-[24px] border border-line/70 bg-mist/60 text-charcoal">
         <div className="flex items-center justify-between border-b border-line/70 bg-white px-4 py-3 sm:px-5">
           <div className="flex items-center gap-2">
             <LogoMark className="h-5 w-5 text-charcoal" />
-            <span className="text-sm font-semibold">Owner portal</span>
+            <span className="text-sm font-semibold">Owner dashboard</span>
           </div>
           <div className="hidden items-center gap-1 rounded-lg bg-mist p-1 text-xs sm:flex">
             <span className="rounded-md bg-white px-3 py-1 font-medium shadow-sm">Overview</span>
-            <span className="px-3 py-1 text-slate">Properties</span>
             <span className="px-3 py-1 text-slate">Documents</span>
+            <span className="px-3 py-1 text-slate">Payments</span>
           </div>
           <span className="grid h-8 w-8 place-items-center rounded-full bg-charcoal text-[11px] font-semibold text-olive-300">
             AK
@@ -179,22 +193,22 @@ function DashboardMock() {
               <div key={kpi.label} className="rounded-xl border border-line/70 bg-white p-3">
                 <p className="text-[11px] text-slate">{kpi.label}</p>
                 <p className="mt-1 text-base font-semibold tracking-tight sm:text-[17px]">{kpi.value}</p>
-                <p className="mt-0.5 text-[11px] text-emerald-700">{kpi.delta}</p>
+                <p className="mt-0.5 text-[11px] text-slate">{kpi.note}</p>
               </div>
             ))}
           </div>
 
           <div className="rounded-xl border border-line/70 bg-white p-4">
             <div className="mb-2 flex items-baseline justify-between">
-              <p className="text-sm font-semibold">Portfolio value</p>
-              <p className="text-[11px] text-slate">Last 12 months · AED</p>
+              <p className="text-sm font-semibold">Estimated value</p>
+              <p className="text-[11px] text-slate">Dubai Marina 1BR · last 12 months · AED</p>
             </div>
             <PortfolioChart />
           </div>
 
           <div className="grid gap-3 sm:grid-cols-[1.35fr_1fr]">
             <div className="rounded-xl border border-line/70 bg-white p-4">
-              <p className="text-sm font-semibold">Properties</p>
+              <p className="text-sm font-semibold">Your units</p>
               <ul className="mt-3 divide-y divide-line/70">
                 {properties.map((p) => (
                   <li key={p.name} className="flex items-center justify-between gap-2 py-2.5 text-xs">
@@ -208,7 +222,7 @@ function DashboardMock() {
               </ul>
             </div>
             <div className="hidden rounded-xl border border-line/70 bg-white p-4 sm:block">
-              <p className="text-sm font-semibold">Activity</p>
+              <p className="text-sm font-semibold">Latest updates</p>
               <ul className="mt-3 space-y-3">
                 {activity.map((a) => (
                   <li key={a.title} className="flex items-start gap-2.5 text-xs">

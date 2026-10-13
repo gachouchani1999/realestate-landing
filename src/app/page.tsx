@@ -5,13 +5,14 @@ import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/hero/Hero";
 import { Journey } from "@/components/Journey";
 import { LeadFlowProvider } from "@/components/lead-flow/LeadFlowProvider";
-import { MarketFacts } from "@/components/MarketFacts";
+import { Founders } from "@/components/Founders";
+import { Pillars } from "@/components/Pillars";
 import { MotionRoot } from "@/components/motion/MotionRoot";
 import { Nav } from "@/components/Nav";
 import { Platform } from "@/components/Platform";
 import { ReportSection } from "@/components/ReportSection";
 import { RoiCalculator } from "@/components/RoiCalculator";
-import { Services } from "@/components/Services";
+import { Stages } from "@/components/Stages";
 import { StickyCta } from "@/components/StickyCta";
 import { site } from "@/config/site";
 import { faqs } from "@/content/landing";
@@ -51,13 +52,14 @@ export default function Home() {
         <MotionRoot>
           <main>
             <Hero />
-            <MarketFacts />
+            <Pillars />
             <Comparison />
-            <Services />
-            <Journey />
             <Platform />
-            <RoiCalculator />
+            <Stages />
+            <Journey />
             <ReportSection />
+            <RoiCalculator />
+            <Founders />
             <Faq />
             <FinalCta />
           </main>

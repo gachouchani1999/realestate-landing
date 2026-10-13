@@ -4,9 +4,9 @@ type Option = { value: string; label: string; hint?: string };
 
 export const INTENTS = [
   { value: "handover", label: "I'm getting my keys", hint: "Handover coming up" },
-  { value: "owner", label: "I already own", hint: "Earn more, stress less" },
-  { value: "buy", label: "I want to buy", hint: "Find the right unit" },
-  { value: "sell", label: "I want to sell", hint: "Exit at the right time" },
+  { value: "owner", label: "I own a property", hint: "Ready, rented or vacant" },
+  { value: "portfolio", label: "I own several", hint: "Two or more units" },
+  { value: "buy", label: "I'm planning to buy", hint: "See the real costs first" },
 ] as const;
 
 export const PROPERTY_TYPES = [
@@ -28,6 +28,20 @@ export const CURRENT_USES = [
   { value: "long-term", label: "Long-term tenant" },
   { value: "holiday-home", label: "Holiday home" },
   { value: "self-use", label: "I use it myself" },
+] as const;
+
+export const UNIT_COUNTS = [
+  { value: "2", label: "2 units" },
+  { value: "3-5", label: "3 – 5 units" },
+  { value: "6-10", label: "6 – 10 units" },
+  { value: "10-plus", label: "More than 10" },
+] as const;
+
+export const PORTFOLIO_USES = [
+  { value: "long-term", label: "Mostly long-term rentals" },
+  { value: "holiday-home", label: "Mostly holiday homes" },
+  { value: "mixed", label: "A mix" },
+  { value: "vacant", label: "Mostly vacant or self-use" },
 ] as const;
 
 export const BUDGETS = [
@@ -53,9 +67,22 @@ export const EMIRATES = [
   { value: "other", label: "Other / not sure yet" },
 ] as const;
 
+/** What the owner wants handled and tracked — shapes the report, routes to partners, and doubles as research. */
+export const INTERESTS = [
+  { value: "handover", label: "Handover & snagging" },
+  { value: "furnishing", label: "Furnishing" },
+  { value: "tenant", label: "Finding a tenant" },
+  { value: "holiday-home", label: "Holiday-home letting" },
+  { value: "maintenance", label: "Maintenance" },
+  { value: "payments", label: "Payments & service charges" },
+  { value: "documents", label: "Documents" },
+  { value: "selling", label: "Selling or valuation" },
+] as const;
+
 export type Intent = (typeof INTENTS)[number]["value"];
 export type Emirate = (typeof EMIRATES)[number]["value"];
-export type DetailField = "propertyType" | "handover" | "currentUse" | "budget" | "timeline";
+export type Interest = (typeof INTERESTS)[number]["value"];
+export type DetailField = "propertyType" | "handover" | "currentUse" | "unitCount" | "portfolioUse" | "budget" | "timeline";
 
 /** The two follow-up questions asked for each intent. */
 export const DETAIL_QUESTIONS: Record<Intent, { field: DetailField; question: string; options: readonly Option[] }[]> = {
@@ -67,59 +94,59 @@ export const DETAIL_QUESTIONS: Record<Intent, { field: DetailField; question: st
     { field: "propertyType", question: "What do you own?", options: PROPERTY_TYPES },
     { field: "currentUse", question: "How is it used today?", options: CURRENT_USES },
   ],
+  portfolio: [
+    { field: "unitCount", question: "How many units do you own?", options: UNIT_COUNTS },
+    { field: "portfolioUse", question: "How are they used today?", options: PORTFOLIO_USES },
+  ],
   buy: [
     { field: "budget", question: "What's your budget?", options: BUDGETS },
     { field: "timeline", question: "When are you looking to buy?", options: TIMELINES },
   ],
-  sell: [
-    { field: "propertyType", question: "What are you selling?", options: PROPERTY_TYPES },
-    { field: "timeline", question: "When would you like to sell?", options: TIMELINES },
-  ],
 };
 
-/** Whether we ask for the community / building (it sharpens estimates and valuations). Buyers only pick an emirate. */
-export const ASKS_COMMUNITY: Record<Intent, boolean> = { handover: true, owner: true, buy: false, sell: true };
+/** Whether we ask for the community / building (it sharpens the report). Others only pick an emirate. */
+export const ASKS_COMMUNITY: Record<Intent, boolean> = { handover: true, owner: true, portfolio: false, buy: false };
 
-/** What each visitor gets for filling in the form. */
+/** The free report each visitor gets, and what happens next — the report leads to a call. */
 export const OFFERS: Record<Intent, { title: string; short: string; cta: string; next: string[] }> = {
   handover: {
-    title: "Get your free rental income estimate",
-    short: "rental income estimate",
-    cta: "Send me my free estimate",
+    title: "Get your free handover report",
+    short: "handover report",
+    cta: "Send me my free report",
     next: [
-      "We review your unit and comparable rentals nearby",
-      "Your estimate arrives — long-term vs holiday home, side by side",
-      "Optional: a 20-minute call to plan your handover",
+      "We review your unit, developer and handover date",
+      "Your report arrives: checklist, running costs, key dates and rental outlook",
+      "Book a call to walk through it and set up your dashboard",
     ],
   },
   owner: {
-    title: "Get your free rental income estimate",
-    short: "rental income estimate",
-    cta: "Send me my free estimate",
+    title: "Get your free property report",
+    short: "property report",
+    cta: "Send me my free report",
     next: [
-      "We review your unit, current setup and comparable rentals",
-      "Your estimate arrives — long-term vs holiday home, side by side",
-      "Optional: a 20-minute call about switching to Baytouna",
+      "We review your unit and how it's used today",
+      "Your report arrives: running costs, key dates, rental outlook and value trend",
+      "Book a call to walk through it and set up your dashboard",
+    ],
+  },
+  portfolio: {
+    title: "Get your free portfolio report",
+    short: "portfolio report",
+    cta: "Send me my free report",
+    next: [
+      "We review your units and how they're used",
+      "Your report arrives: costs, key dates and value trend across your portfolio",
+      "Book a call to walk through it and set up your dashboard",
     ],
   },
   buy: {
-    title: "Get your free investment report",
-    short: "investment report",
+    title: "Get your free ownership cost report",
+    short: "ownership cost report",
     cta: "Send me my free report",
     next: [
-      "We review your goals and shortlist opportunities",
-      "Your report arrives with real performance data",
-      "Optional: a 20-minute strategy call with your advisor",
-    ],
-  },
-  sell: {
-    title: "Get your free valuation & exit plan",
-    short: "valuation & exit plan",
-    cta: "Send me my free valuation",
-    next: [
-      "We review recent sales and buyer demand for your unit",
-      "Your valuation & exit plan arrives in your inbox",
-      "Optional: a 20-minute call to plan timing",
+      "We review your budget and timeline",
+      "Your report arrives: the real cost of owning, rental outlook and value trends",
+      "Book a call to walk through it",
     ],
   },
 };
@@ -145,12 +172,14 @@ export type Lead = Contact & {
   details: Details;
   emirate: Emirate;
   community?: string;
+  /** What they want the dashboard to track. */
+  interests: Interest[];
   /** Human-readable one-liner for inboxes, spreadsheets and CRMs. */
   summary: string;
   source: LeadSource;
 };
 
-export type LeadErrors = Partial<Record<keyof Contact | DetailField | "intent" | "emirate", string>>;
+export type LeadErrors = Partial<Record<keyof Contact | DetailField | "intent" | "emirate" | "interests", string>>;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[\d\s().-]{7,20}$/;
@@ -207,6 +236,11 @@ function uuid(value: unknown) {
   return typeof value === "string" && UUID_RE.test(value) ? value.toLowerCase() : undefined;
 }
 
+function parseInterests(value: unknown): Interest[] {
+  if (!Array.isArray(value)) return [];
+  return INTERESTS.map((o) => o.value).filter((v) => value.includes(v));
+}
+
 function parseSource(value: unknown): LeadSource {
   const s = record(value);
   return {
@@ -259,6 +293,7 @@ export function parseLead(body: unknown): { lead: Lead } | { errors: LeadErrors 
       details,
       emirate,
       community,
+      interests: parseInterests(b.interests),
       summary: summarise(intent, details, emirate, community),
       source,
     },
@@ -276,6 +311,7 @@ export type PartialLead = Partial<Contact> & {
   details?: Details;
   emirate?: Emirate;
   community?: string;
+  interests?: Interest[];
   /** The question the visitor was on when this was saved. */
   lastStep?: string;
   summary?: string;
@@ -311,6 +347,7 @@ export function parsePartialLead(body: unknown): { lead: PartialLead } | { error
       details: intent ? details : undefined,
       emirate,
       community,
+      interests: parseInterests(b.interests),
       lastStep: str(b.lastStep, 40) || undefined,
       summary: intent ? summarise(intent, details, emirate, community) : undefined,
       source: parseSource(b.source),

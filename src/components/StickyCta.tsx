@@ -38,7 +38,7 @@ export function StickyCta() {
           tabIndex={visible ? 0 : -1}
           className="group inline-flex h-12 flex-1 items-center justify-center gap-3 rounded-md bg-charcoal text-[15px] font-medium text-white"
         >
-          Get my free estimate <CtaArrow />
+          Get my free report <CtaArrow />
         </a>
         <a
           href={whatsappLink()}

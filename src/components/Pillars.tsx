@@ -1,13 +1,13 @@
-import { marketFacts } from "@/content/landing";
+import { pillars } from "@/content/landing";
 import { cn } from "@/lib/utils";
 
-export function MarketFacts() {
+export function Pillars() {
   return (
-    <section aria-label="UAE market at a glance" className="bg-sage-100">
+    <section aria-label="Baytouna at a glance" className="bg-sage-100">
       <dl className="wrap grid grid-cols-2 lg:grid-cols-4">
-        {marketFacts.map((fact, i) => (
+        {pillars.map((pillar, i) => (
           <div
-            key={fact.label}
+            key={pillar.label}
             className={cn(
               "flex flex-col-reverse justify-end gap-3 py-10 sm:py-14",
               i % 2 === 1 && "border-l border-charcoal/10 pl-5 sm:pl-8",
@@ -18,10 +18,10 @@ export function MarketFacts() {
             )}
           >
             <dt data-reveal className="max-w-[15rem] text-sm leading-snug text-slate">
-              {fact.label}
+              {pillar.label}
             </dt>
             <dd data-split className="headline text-[clamp(2.6rem,4.6vw,4.2rem)] text-charcoal">
-              {fact.value}
+              {pillar.value}
             </dd>
           </div>
         ))}

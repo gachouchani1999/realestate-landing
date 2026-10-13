@@ -19,7 +19,7 @@ export function Faq() {
           />
           <div data-reveal className="mt-12 rounded-[28px] bg-mist p-7">
             <p className="text-lg font-medium">Still have a question?</p>
-            <p className="mt-1.5 text-sm text-slate">Talk to an advisor — no sales pitch, just straight answers.</p>
+            <p className="mt-1.5 text-sm text-slate">Message us — no sales pitch, just straight answers.</p>
             <div className="mt-6 flex flex-col gap-2.5 sm:flex-row lg:flex-col xl:flex-row">
               <a
                 href={whatsappLink()}

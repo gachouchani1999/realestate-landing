@@ -26,7 +26,7 @@ export function Comparison() {
               Owning from abroad shouldn&apos;t feel like <span className="accent">a second job</span>
             </>
           }
-          sub="Most overseas owners juggle developers, agents, furnishers and property managers — each with their own agenda. Baytouna replaces them with one accountable team."
+          sub="Most overseas owners juggle developers, agents, contractors and paperwork across time zones. With Baytouna it's one team: licensed specialists do the work, and your dashboard tracks it."
         />
 
         {/* Desktop: side-by-side */}

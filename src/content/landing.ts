@@ -1,240 +1,202 @@
 // Page copy lives here so it can be edited without touching layout code.
+// Positioning: a one-stop shop. Baytouna is the single team the owner deals with; vetted, licensed partners do the
+// work (regulated work only ever by licensed partners) and Baytouna coordinates it and tracks it in the dashboard.
 import { site } from "@/config/site";
 
-export const marketFacts = [
-  { value: "0%", label: "Personal income tax on rental income" },
-  { value: "100%", label: "Freehold ownership for foreigners in designated areas" },
-  { value: "10-yr", label: "Golden Visa for property investments of AED 2M+" },
-  { value: "6–8%", label: "Typical gross rental yields in Dubai¹" },
+/** The strip under the hero — what owners get, at a glance. */
+export const pillars = [
+  { value: "1", label: "dashboard for every unit, document and payment" },
+  { value: "0", label: "flights needed to stay on top of it" },
+  { value: "24/7", label: "view of your property, wherever you live" },
+  { value: "1", label: "team that handles everything else" },
 ];
 
 export const comparison = [
   {
     topic: "Handover",
-    alone: "Flying in for snagging, utility connections and paperwork.",
-    withUs: "Snagging, utilities and paperwork handled remotely, on your behalf.",
+    alone: "Chasing the developer for snag updates from abroad.",
+    withUs: "Snagging done by licensed inspectors, tracked with photos until fixed.",
   },
   {
-    topic: "Furnishing",
-    alone: "Weeks of quotes and deliveries from thousands of kilometres away.",
-    withUs: "A turnkey, rent-ready furnishing package at a fixed price.",
+    topic: "Documents",
+    alone: "Title deed, SPA and contracts scattered across email threads.",
+    withUs: "One secure vault, always to hand.",
   },
   {
-    topic: "Income",
-    alone: "Chasing agents, viewings, cheques and guest messages.",
-    withUs: "Screened long-term tenants or a fully run holiday home.",
+    topic: "Payments",
+    alone: "Instalments and service charges found when the late notice arrives.",
+    withUs: "Reminders before every due date.",
   },
   {
-    topic: "Upkeep",
+    topic: "Rent",
+    alone: "Finding tenants, chasing cheques and reconciling agents' statements.",
+    withUs: "Tenants found and managed by our licensed partner; rent in one view."
+  },
+  {
+    topic: "Maintenance",
     alone: "Late-night calls about air conditioning and leaks.",
-    withUs: "One team handles maintenance, with photos and invoices.",
+    withUs: "Fixed by vetted technicians, logged with photos and invoices.",
   },
   {
-    topic: "Visibility",
-    alone: "Updates only when someone remembers to message you.",
-    withUs: "A live owner dashboard and quarterly performance reviews.",
-  },
-  {
-    topic: "Next move",
-    alone: "Guessing when to buy another unit, refinance or sell.",
-    withUs: "Decisions made on your property's real performance data.",
+    topic: "Value",
+    alone: "Guessing what it's worth, and who to trust to sell it.",
+    withUs: "Value tracked; valuations and sales through licensed partners.",
   },
 ];
 
-/** The three ways Baytouna works with clients — and how it is paid for each. */
-export const services = [
+/** The dashboard's core features, shown next to the product preview. */
+export const platformFeatures = [
+  { title: "Handover tracker", body: "Snags, utilities, keys and access cards — every step with photos.", icon: "handover" },
+  { title: "Document vault", body: "Title deed, SPA, tenancy contracts and receipts in one place.", icon: "vault" },
+  { title: "Payments & reminders", body: "Instalments, service charges and renewals, before they're due.", icon: "payments" },
+  { title: "Rent & costs", body: "What came in, what went out, and your net income.", icon: "rent" },
+  { title: "Maintenance log", body: "Requests, quotes and fixes, tracked from report to done.", icon: "maintenance" },
+  { title: "Value trend", body: "How your unit's value moves, from public transaction data.", icon: "value" },
+] as const;
+
+/** Who sits behind the one-stop shop — shown as chips in the "You → Baytouna → specialists" diagram. */
+export const specialists = [
+  "Snagging inspectors",
+  "Furnishing studio",
+  "Leasing & management (RERA-licensed)",
+  "Holiday-home operator",
+  "Maintenance teams",
+  "Brokers & valuers",
+];
+
+/** Everything handled across the life of the property. `handledBy` names the licensed partners behind each stage. */
+export const stages = [
   {
-    tag: "Start here",
-    title: "Handover to income",
-    lead: "From keys to first rent, without flying in.",
+    tag: "Before & at handover",
+    title: "Handover",
+    lead: "Your unit inspected, set up and ready — without flying in.",
     points: [
-      "Snagging inspection and defect follow-up",
-      "Utilities, access cards and move-in permits",
-      "Turnkey furnishing designed to rent",
-      "Photography, listing and your first tenant or guests",
+      "Snagging inspection and defect follow-up, with photos",
+      "Utilities, internet and access cards set up",
+      "Keys collected under your power of attorney",
+      "Rent-ready furnishing at a fixed price",
     ],
-    paid: "A fixed package fee, quoted upfront.",
+    handledBy: "Licensed snagging inspectors and our furnishing studio",
   },
   {
-    tag: "Our core",
-    title: "Property management",
-    lead: "Hands-free income, run by one accountable team.",
-    options: [
-      {
-        name: "Long-term rental",
-        body: "Steady, low-effort income: tenant screening, contracts, rent collection, renewals and maintenance.",
-        paid: "A percentage of the rent we collect.",
-      },
-      {
-        name: "Holiday home",
-        body: "Higher earning potential: pricing, listings, guest service, cleaning and holiday-home permits.",
-        paid: "A share of booking revenue.",
-      },
+    tag: "Every month",
+    title: "Own & rent",
+    lead: "Tenants, upkeep and paperwork handled, and every dirham tracked.",
+    points: [
+      "Tenants found, screened and managed",
+      "Holiday-home letting, if it earns you more",
+      "Maintenance and repairs, with quotes and photos",
+      "Rent, costs and renewals in your dashboard",
     ],
-    paid: "If your property isn't earning, neither are we.",
+    handledBy: "RERA-licensed leasing and management partners, and a licensed holiday-home operator",
   },
   {
     tag: "When you're ready",
-    title: "Buy & sell",
-    lead: "Your next unit — and your exit — on real data.",
+    title: "Grow or exit",
+    lead: "Valuations, sales and your next unit, on real numbers.",
     points: [
-      "Opportunities scored on the performance of units we manage",
-      "Negotiation and 100% remote purchase",
-      "Valuation and resale timing",
-      "Refinancing introductions",
+      "Valuations whenever you need one",
+      "Selling, with your full history ready to share",
+      "Your next property added in minutes",
+      "Value trend from public transaction data",
     ],
-    paid: "A standard commission, always disclosed before you commit.",
+    handledBy: "Licensed brokers and registered valuers",
   },
 ] as const;
 
 export const principles = [
-  { title: "We earn when you earn", body: "Management fees come from income we generate — never from vacant months." },
-  { title: "Every fee in writing", body: "Packages, percentages and commissions agreed before any work begins." },
-  { title: "One team, keys to exit", body: "No hand-offs between agents, managers and brokers with different agendas." },
+  { title: "One team for everything", body: "You message us. We brief the right specialist and log every update in your dashboard." },
+  { title: "Licensed for every job", body: "Every partner is vetted, and regulated work is only ever done by licensed professionals." },
+  { title: "Your data stays yours", body: "Documents are shared only with your permission, and never sold." },
 ];
 
+/** How it works: free report → call → dashboard. */
 export const journey = [
   {
-    title: "Strategy",
-    body: "We define your goals, budget, risk appetite and horizon — yield, growth, visa or lifestyle.",
-    icon: "compass",
+    title: "Tell us about your property",
+    body: "Three quick steps, about a minute. Getting your keys, already own, or several units.",
+    icon: "start",
   },
   {
-    title: "Sourcing",
-    body: "Off-plan and ready units, scored on the real performance of comparable units we manage.",
-    icon: "search",
+    title: "Get your free report",
+    body: `Running costs, key dates, rental outlook and value trend — in your inbox within ${site.reportTurnaround}.`,
+    icon: "report",
   },
   {
-    title: "Due diligence",
-    body: "Title, escrow, service charges, rental comparables and developer history — independently verified.",
-    icon: "shield",
+    title: "Book a call",
+    body: "We walk you through the report and answer anything — no sales pitch.",
+    icon: "call",
   },
   {
-    title: "Acquisition",
-    body: "Negotiation, mortgage support, registration and POA — so you never need to fly in.",
-    icon: "handshake",
+    title: "We set up your dashboard",
+    body: "Documents, dates and your handover or rental details, set up for you.",
+    icon: "setup",
   },
   {
-    title: "Handover & furnishing",
-    body: "Snagging inspections, utilities, fit-out and turnkey furnishing packages designed to rent.",
-    icon: "sofa",
-  },
-  {
-    title: "Leasing",
-    body: "Long-term tenants or a holiday home — pricing, marketing, screening and contracts.",
-    icon: "key",
-  },
-  {
-    title: "Management",
-    body: "Rent collection, guests, maintenance, renewals and compliance, all handled by one team.",
-    icon: "wrench",
-  },
-  {
-    title: "Reporting & exit",
-    body: "Live dashboard, quarterly reviews and a clear plan to refinance, buy again or sell.",
-    icon: "chart",
+    title: "We handle the rest",
+    body: "Snagging, furnishing, tenants and repairs handled by our partners — every update in your dashboard.",
+    icon: "track",
   },
 ] as const;
 
-/** Phases of the A–Z journey, by stage index (0-based, inclusive). */
+/** Phases of the journey, by step index (0-based, inclusive). */
 export const phases = [
-  { name: "Acquire", from: 0, to: 3 },
-  { name: "Operate", from: 4, to: 6 },
-  { name: "Exit", from: 7, to: 7 },
+  { name: "Free", from: 0, to: 2 },
+  { name: "Founding owners", from: 3, to: 4 },
 ];
 
-/** Stage where most clients join (0-based). */
-export const ownerEntryStage = 4;
+export const reportContents = [
+  { title: "Running costs", body: "Service charges, fees, utilities and furnishing — what owning really costs." },
+  { title: "Key dates", body: "Handover, payments, renewals and deadlines, in order." },
+  { title: "Rental outlook", body: "Long-term and holiday-home ranges for your community." },
+  { title: "Value trend", body: "How prices for comparable units have moved." },
+  { title: "Your checklist", body: "What to do next — for handover, renting or selling." },
+];
 
-export const platformFeatures = [
-  {
-    title: "Live owner dashboard",
-    body: "Rent, bookings, occupancy, expenses and valuations — updated in real time.",
-    icon: "dashboard",
-  },
-  {
-    title: "One dedicated advisor",
-    body: "A single point of contact on WhatsApp, working around your time zone.",
-    icon: "advisor",
-  },
-  {
-    title: "Transparent by default",
-    body: "Every fee, quote and invoice shared upfront and kept in your document vault.",
-    icon: "vault",
-  },
-  {
-    title: "100% remote",
-    body: "Handover, leasing and management without flying in — POA and e-signatures handled.",
-    icon: "remote",
-  },
-] as const;
+export const reportSmallPrint =
+  "Rental outlook prepared with our RERA-licensed leasing partner. Value trend based on public Dubai Land Department transaction data. Not a formal valuation.";
 
-export const estimateContents = {
-  owners: {
-    heading: "Owners & new keys",
-    offer: "Free rental income estimate",
-    items: [
-      { title: "Long-term vs holiday home", body: "Expected income for your unit under both strategies, side by side." },
-      { title: "Occupancy & seasonality", body: "Real demand for your community, month by month." },
-      { title: "True cost breakdown", body: "Service charges, fees, furnishing and running costs — no surprises." },
-      { title: "Handover-to-income plan", body: "What needs doing, in what order, and how soon you can earn." },
-    ],
-  },
-  buyers: {
-    heading: "Buyers & sellers",
-    offer: "Free investment report or valuation",
-    items: [
-      { title: "Strategy for your goals", body: "Yield, growth or Golden Visa — the right play for your timeline." },
-      { title: "Units scored on real data", body: "Shortlists ranked by the performance of comparable units we manage." },
-      { title: "5-year projection", body: "Rental income, capital growth and net return, stress-tested." },
-      { title: "Valuation & exit timing", body: "For sellers: what your unit is worth today and when to list." },
-    ],
-  },
-};
-
-export const steps = [
-  { title: "Tell us about your property", body: "Or what you're looking for. Three quick steps, about a minute." },
-  {
-    title: "Get your free estimate",
-    body: `An advisor builds your personalised estimate or report and sends it within ${site.reportTurnaround}.`,
-  },
-  {
-    title: "We take it from there",
-    body: "Handover, tenants or guests, management — and your next move when you're ready.",
-  },
+/** The people behind Baytouna. TODO(before launch): real names, roles, one-line bios and photos (/public/team/…). */
+export const team = [
+  { name: "Founder name", role: "Co-founder · Owner experience", bio: "One line about you and why you started Baytouna.", photo: "" },
+  { name: "Founder name", role: "Co-founder · Product", bio: "One line about you and what you're building.", photo: "" },
 ];
 
 export const faqs = [
   {
-    q: "I'm getting my keys soon — when should I contact you?",
-    a: "Ideally two to three months before handover. That gives us time to plan snagging, utilities, furnishing and marketing so your unit starts earning within weeks of completion, not months. If you already have your keys, we can start straight away.",
+    q: "What is Baytouna?",
+    a: "An owner dashboard for UAE property, with one team behind it. Handover, documents, payments, maintenance and rent are tracked in one place — and when something needs doing, you message us and we coordinate it.",
   },
   {
-    q: "Long-term tenant or holiday home — which earns more?",
-    a: "Holiday homes can earn more in the right community, but income moves with the seasons and running costs are higher. Long-term lets are steadier and lower-effort. Your free estimate compares both for your specific unit, so you can choose on real numbers.",
+    q: "What can you handle for me?",
+    a: "Everything your property needs: snagging and handover, furnishing, finding and managing tenants, holiday-home letting, maintenance, valuations and selling. You deal with one team, and every job is tracked in your dashboard.",
   },
   {
-    q: "How does Baytouna charge?",
-    a: "Handover to income is a fixed package fee, quoted upfront. Long-term management is a percentage of the rent we actually collect, and holiday-home management is a share of booking revenue — so if your property isn't earning, neither are we. For buying and selling we charge a standard commission, always disclosed before you commit.",
+    q: "What's in the free property report?",
+    a: `Running costs, key dates, a rental outlook and value trend for your unit, plus a checklist of next steps. It arrives within ${site.reportTurnaround}, and you can book a call to walk through it.`,
+  },
+  {
+    q: "Is the dashboard free?",
+    a: "Founding owners get it free for their first unit while we build it with them. We'll always tell you before anything becomes paid.",
+  },
+  {
+    q: "Who does the work?",
+    a: "Our network of vetted partners: licensed snagging inspectors, a furnishing studio, RERA-licensed leasing and management companies, a licensed holiday-home operator, maintenance teams, brokers and valuers. We coordinate them, you deal only with us, and their updates appear in your dashboard.",
   },
   {
     q: "Do I need to be in the UAE?",
-    a: "No. We handle handover, setup and management remotely — with a power of attorney where needed — and you follow everything in your owner dashboard.",
+    a: "No. Everything — from handover to renewals — can be followed from your dashboard, wherever you live. Where someone needs to act on your behalf, a power of attorney covers it.",
   },
   {
-    q: "Can I switch from my current property manager?",
-    a: "Yes. We review your current setup and contracts, coordinate the handover from your existing manager, and keep your tenant in place where it makes sense.",
+    q: "Can I add a property I'm still waiting for?",
+    a: "Yes. Off-plan units can be tracked from payment plan to handover, and ready units from day one.",
   },
   {
-    q: "Can foreigners buy property in the UAE?",
-    a: "Yes. Foreign nationals can buy freehold property outright in designated areas across Dubai, Abu Dhabi and the other emirates — no local sponsor or residency needed.",
-  },
-  {
-    q: "Can owning property get me a UAE Golden Visa?",
-    a: "Property investments of AED 2 million or more can qualify you for a 10-year Golden Visa, subject to current eligibility rules. We can check what you'd qualify for and how to structure a purchase.",
+    q: "Is my data safe?",
+    a: "Your documents are visible only to you and anyone you choose to share them with. We never sell your data.",
   },
   {
     q: "Which areas do you cover?",
-    a: `We work across ${site.coverage}. Recommendations follow your goals and the data — not a single developer or community.`,
+    a: `${site.coverage}.`,
   },
 ];

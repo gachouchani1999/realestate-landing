@@ -93,13 +93,13 @@ export function RoiCalculator() {
     <section id="calculator" className="relative isolate scroll-mt-16 overflow-hidden bg-sage py-24 sm:py-36">
       <div className="wrap">
         <SectionHeading
-          eyebrow="Earnings calculator"
+          eyebrow="Income estimate · illustrative"
           title={
             <>
-              What could your property <span className="accent">earn?</span>
+              What could your unit <span className="accent">earn?</span>
             </>
           }
-          sub="Compare long-term and holiday-home income for a UAE unit — then get a real estimate for yours."
+          sub="A rough guide to long-term and holiday-home income. Your free report gives you ranges for your actual unit."
         />
 
         <div data-reveal className="mt-16 grid gap-3 lg:grid-cols-[0.82fr_1.18fr]">
@@ -197,8 +197,9 @@ export function RoiCalculator() {
               />
             </div>
             <p className="mt-8 border-t border-line pt-5 text-xs leading-relaxed text-slate">
-              Illustrative only — not financial advice. Holiday-home income varies with season, community and running
-              costs. Assumes flat rents and steady appreciation; excludes purchase costs and mortgage payments.
+              Illustrative estimate only — not a valuation or financial advice. Holiday-home income varies with season,
+              community and running costs. Assumes flat rents and steady appreciation; excludes purchase costs and
+              mortgage payments. Leasing and management are provided by RERA-licensed partners.
             </p>
           </div>
 
@@ -275,7 +276,7 @@ export function RoiCalculator() {
             </div>
 
             <a href="#get-report" className={buttonClass("light", "lg", "mt-7 w-full justify-between")}>
-              Get a real estimate for my unit <CtaArrow />
+              Get the free report for my unit <CtaArrow />
             </a>
           </div>
         </div>

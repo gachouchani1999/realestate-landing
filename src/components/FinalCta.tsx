@@ -39,15 +39,15 @@ export function FinalCta() {
       <div className="wrap flex flex-col items-center text-center">
         <Eyebrow tone="dark">Start today</Eyebrow>
         <h2 data-split className="headline mt-8 max-w-6xl text-[clamp(2.6rem,5.8vw,5.6rem)] text-balance">
-          Your keys, your income, handled <span className="text-olive-300">from A to Z</span>
+          Your property, tracked <span className="text-olive-300">from A to Z</span>
         </h2>
         <p data-reveal className="mt-8 max-w-xl text-lg leading-relaxed text-white/65">
-          Getting your keys or already own? Start with a free rental income estimate for your unit. Buying or
-          selling? We&apos;ll build you a free plan. No cost, no obligation.
+          One team, one dashboard, and licensed specialists for everything your property needs. Start with a free
+          report on your property, then book a call to walk through it.
         </p>
         <div data-reveal className="mt-11 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
           <a href="#get-report" className={buttonClass("light", "lg", "w-full sm:w-auto")}>
-            Get my free estimate <CtaArrow />
+            Get my free report <CtaArrow />
           </a>
           <a
             href={whatsappLink()}

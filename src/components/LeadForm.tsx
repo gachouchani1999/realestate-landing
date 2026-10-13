@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 const palm = palmPixels();
 
-const benefits = ["Long-term vs holiday-home income", "Full cost breakdown", "Handover-to-income plan"];
+const benefits = ["Running costs & key dates", "Rental outlook & value trend", "A call to walk you through it"];
 
 /** Hero card: captures the email, then hands over to the full-screen question flow. */
 export function LeadForm() {
@@ -54,8 +54,8 @@ export function LeadForm() {
         </span>
       </div>
 
-      <h2 className="relative mt-16 max-w-[20rem] text-[1.75rem] leading-[1.1] font-medium tracking-[-0.02em] sm:mt-20 sm:text-[2rem]">
-        Get your free rental income estimate
+      <h2 className="relative mt-16 max-w-[15rem] text-[1.75rem] leading-[1.1] font-medium tracking-[-0.02em] sm:mt-20 sm:text-[2rem]">
+        Get your free property report
       </h2>
       <p className="relative mt-2 text-sm text-slate">
         For your unit, in your inbox within {site.reportTurnaround}.
@@ -125,7 +125,7 @@ export function LeadForm() {
             </li>
           ))}
         </ul>
-        <p className="mt-5 text-sm text-slate">Buying or selling instead? Start the same way — we&apos;ll tailor it.</p>
+        <p className="mt-5 text-sm text-slate">Founding owners also get the Baytouna dashboard, free.</p>
       </div>
     </div>
   );

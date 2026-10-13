@@ -11,10 +11,10 @@ import { cornerScatter } from "@/lib/pixels";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "#services", label: "Services" },
-  { href: "#journey", label: "A to Z journey" },
-  { href: "#platform", label: "Owner platform" },
-  { href: "#calculator", label: "Earnings calculator" },
+  { href: "#product", label: "The dashboard" },
+  { href: "#how", label: "How it works" },
+  { href: "#report", label: "Free report" },
+  { href: "#team", label: "Who we are" },
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -98,7 +98,7 @@ export function Nav() {
               href="#get-report"
               className="group hidden items-center gap-2 text-sm font-medium transition-colors hover:text-olive-800 sm:inline-flex"
             >
-              Free estimate <CtaArrow />
+              Free report <CtaArrow />
             </a>
             <button
               type="button"
@@ -174,14 +174,14 @@ export function Nav() {
 
             <aside className="menu-aside self-end rounded-[28px] bg-white/[0.06] p-7 ring-1 ring-white/10">
               <p className="text-xl leading-snug font-medium">
-                Getting your keys or already own? Get a free rental income estimate for your unit.
+                Get a free report on your property — then a call to walk you through it.
               </p>
               <a
                 href="#get-report"
                 onClick={() => setOpen(false)}
                 className={buttonClass("light", "lg", "mt-6 w-full justify-between")}
               >
-                Get my free estimate <CtaArrow />
+                Get my free report <CtaArrow />
               </a>
               <div className="mt-6 space-y-3 text-sm text-white/70">
                 <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 hover:text-white">

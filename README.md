@@ -2,8 +2,11 @@
 
 Lead-generation landing page for Baytouna.ae: "Your Partner from A to Z". Next.js 16, Tailwind CSS 4 and GSAP.
 
-The page is owner-first: the main offer is a free rental income estimate for people getting their keys or who
-already own. Buyers (free investment report) and sellers (free valuation) have their own path through the same form.
+Baytouna is positioned as a **one-stop shop**: one team and one **owner dashboard**, with a network of vetted,
+licensed partners handling snagging, furnishing, leasing and management, holiday homes, maintenance, sales and
+valuations. Visitors get a **free property report** for their unit, then **book a call** to walk through it; founding
+owners get the dashboard set up for free. The site always says partners do the work and Baytouna coordinates it —
+regulated work is never claimed as in-house.
 
 ```bash
 pnpm install
@@ -15,9 +18,9 @@ pnpm build && pnpm start
 
 | What | Where |
 | --- | --- |
-| Contact details, WhatsApp number, report turnaround | `src/config/site.ts` |
-| Page copy (services & how we're paid, comparison, A–Z stages and phases, FAQ…) | `src/content/landing.ts` |
-| Lead form paths, questions and offers per intent | `src/lib/leads.ts` (`INTENTS`, `DETAIL_QUESTIONS`, `EMIRATES`, `OFFERS`) |
+| Contact details, WhatsApp, booking link (`bookingUrl`), legal name, licence no. | `src/config/site.ts` |
+| Page copy (pillars, comparison, dashboard features, stages, how it works, report, team, FAQ…) | `src/content/landing.ts` |
+| Lead form paths, questions, report offers per intent | `src/lib/leads.ts` (`INTENTS`, `DETAIL_QUESTIONS`, `EMIRATES`, `INTERESTS`, `OFFERS`) |
 | Hero email capture | `src/components/LeadForm.tsx` |
 | Full-screen, one-question-at-a-time form | `src/components/lead-flow/LeadFlow.tsx` (opened via `LeadFlowProvider`) |
 | Community suggestions, country guess from time zone | `src/lib/locations.ts` |
@@ -62,7 +65,8 @@ Every submission is validated, logged, and then:
 - **Not set, in development** → appended to `.data/leads.jsonl` (git-ignored).
 - **Not set, in production** → only written to the server logs. Set the webhook before launch.
 
-Each lead includes the visitor's intent (getting keys / own / buy / sell), their answers, emirate, community, contact
+Each lead includes the visitor's intent (getting keys / own one / own several / planning to buy), their answers,
+what they want to track (`interests`), emirate, community, contact
 details, UTM parameters, and a one-line `summary` (e.g. "I'm getting my keys · 2 bedrooms · Within 3 months ·
 Dubai Marina") that is handy for email alerts, sheets and CRMs. A hidden honeypot field and a light per-IP rate limit filter basic spam.
 
@@ -72,9 +76,11 @@ See `.env.example` for all environment variables.
 
 ## Before launch
 
-- Replace the placeholder email, WhatsApp number and phone in `src/config/site.ts`.
+- Replace the placeholder email, WhatsApp number, phone, legal name and licence number in `src/config/site.ts`, and
+  add a `bookingUrl` (Calendly / Cal.com) if you want calls booked on a calendar instead of WhatsApp.
+- Add the founders' names, roles, bios and photos (`team` in `src/content/landing.ts`, photos in `public/team/`).
 - Confirm the market facts, services, fee descriptions, FAQ answers and estimate contents in `src/content/landing.ts`.
 - Check the calculator presets match your real long-term and holiday-home numbers.
 - Make sure you hold the licences each service needs (RERA for brokerage and leasing, DET for holiday homes).
 - Add a privacy policy page and link it from the form and footer.
-- Add real social proof (testimonials, results, licence/RERA number) once available.
+- Sign the licensed partners before mentioning them by name, and add real testimonials once you have them.

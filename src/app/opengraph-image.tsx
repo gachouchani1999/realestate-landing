@@ -39,8 +39,8 @@ export default function OpengraphImage() {
         <span style={{ fontSize: 22, opacity: 0.6, fontFamily: "sans-serif", letterSpacing: 0 }}>.ae</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex", fontSize: 92, lineHeight: 0.96, maxWidth: 900 }}>YOUR UAE PROPERTY PARTNER,</div>
-        <div style={{ display: "flex", fontSize: 92, lineHeight: 0.96, color: "#5b5e36" }}>FROM A TO Z</div>
+        <div style={{ display: "flex", fontSize: 92, lineHeight: 0.96, maxWidth: 900 }}>YOUR UAE PROPERTY,</div>
+        <div style={{ display: "flex", fontSize: 92, lineHeight: 0.96, color: "#5b5e36" }}>TRACKED FROM A TO Z</div>
         <div
           style={{
             display: "flex",
@@ -54,7 +54,7 @@ export default function OpengraphImage() {
             borderRadius: 8,
           }}
         >
-          Get your free rental income estimate ↱
+          Get your free property report ↱
         </div>
       </div>
     </div>,

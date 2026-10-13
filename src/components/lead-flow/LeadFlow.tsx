@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ArrowRight, Check, ChevronDown, ChevronUp, LoaderCircle, MapPin, MessageCircle } from "lucide-react";
+import { ArrowRight, CalendarClock, Check, ChevronDown, ChevronUp, LoaderCircle, MapPin, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PixelArt } from "@/components/pixels/PixelArt";
 import { CtaArrow } from "@/components/ui";
-import { site, whatsappLink } from "@/config/site";
+import { bookingLink, site, whatsappLink } from "@/config/site";
 import { gsap, useGSAP } from "@/lib/gsap";
 import {
   ASKS_COMMUNITY,
   DETAIL_QUESTIONS,
   EMIRATES,
   INTENTS,
+  INTERESTS,
   OFFERS,
   contactFieldError,
   labelFor,
@@ -20,6 +21,7 @@ import {
   type Details,
   type Emirate,
   type Intent,
+  type Interest,
   type LeadErrors,
   type LeadSource,
 } from "@/lib/leads";
@@ -33,6 +35,7 @@ type ChoiceId = "intent" | DetailField | "emirate";
 type Question =
   | { id: ChoiceId; kind: "choice"; title: string; help?: string; options: readonly Option[] }
   | { id: "community"; kind: "community"; title: string; help?: string }
+  | { id: "interests"; kind: "multi"; title: string; help?: string; options: readonly Option[] }
   | { id: keyof Contact; kind: "text"; title: string; help?: string }
   | { id: "review"; kind: "review"; title: string; help?: string };
 
@@ -41,14 +44,27 @@ type Answers = Contact & {
   details: Details;
   emirate: Emirate | null;
   community: string;
+  interests: Interest[];
 };
 
-const EMPTY: Answers = { intent: null, details: {}, emirate: null, community: "", name: "", email: "", phone: "", country: "" };
+const EMPTY: Answers = {
+  intent: null,
+  details: {},
+  emirate: null,
+  community: "",
+  interests: [],
+  name: "",
+  email: "",
+  phone: "",
+  country: "",
+};
 
 const DETAIL_LABELS: Record<DetailField, string> = {
   propertyType: "Property",
   handover: "Handover",
   currentUse: "Currently",
+  unitCount: "Units",
+  portfolioUse: "Used as",
   budget: "Budget",
   timeline: "Timeline",
 };
@@ -88,7 +104,7 @@ function buildQuestions(a: Answers, emailLocked: boolean, countryGuessed: boolea
       id: "intent",
       kind: "choice",
       title: "What brings you to Baytouna?",
-      help: "Pick one — we'll tailor your free estimate.",
+      help: "Pick one — we'll tailor your free report.",
       options: INTENTS,
     },
   ];
@@ -99,7 +115,12 @@ function buildQuestions(a: Answers, emailLocked: boolean, countryGuessed: boolea
     list.push({
       id: "emirate",
       kind: "choice",
-      title: a.intent === "buy" ? "Where would you like to buy?" : "Which emirate is the property in?",
+      title:
+        a.intent === "buy"
+          ? "Where would you like to buy?"
+          : a.intent === "portfolio"
+            ? "Where are most of your units?"
+            : "Which emirate is the property in?",
       options: EMIRATES,
     });
     if (ASKS_COMMUNITY[a.intent]) {
@@ -110,6 +131,13 @@ function buildQuestions(a: Answers, emailLocked: boolean, countryGuessed: boolea
         help: "Start typing or pick a popular one. Not sure? Skip it.",
       });
     }
+    list.push({
+      id: "interests",
+      kind: "multi",
+      title: "What would you like help with?",
+      help: "Choose all that apply — we'll handle it, track it, and focus your report on it.",
+      options: INTERESTS,
+    });
   }
   list.push({ id: "name", kind: "text", title: "What's your full name?" });
   if (!emailLocked) {
@@ -259,6 +287,7 @@ export function LeadFlow({
       details: a.details,
       emirate: a.emirate,
       community: a.community,
+      interests: a.interests,
       name: a.name,
       email: a.email,
       // Leave out the pre-filled dialling code and guessed country until the visitor has confirmed them.
@@ -368,6 +397,7 @@ export function LeadFlow({
   function validate(q: Question): string | null {
     if (q.kind === "choice") return valueOf(q.id) ? null : "Please choose an option.";
     if (q.kind === "text") return contactFieldError[q.id](answers[q.id]) ?? null;
+    if (q.kind === "multi") return answers.interests.length ? null : "Choose at least one.";
     return null;
   }
 
@@ -386,6 +416,14 @@ export function LeadFlow({
 
   function prev() {
     if (step > 0) go(step - 1, -1);
+  }
+
+  function toggleInterest(value: Interest) {
+    setError(null);
+    setAnswers((a) => ({
+      ...a,
+      interests: a.interests.includes(value) ? a.interests.filter((v) => v !== value) : [...a.interests, value],
+    }));
   }
 
   function choose(q: Extract<Question, { kind: "choice" }>, value: string) {
@@ -440,6 +478,7 @@ export function LeadFlow({
           details: answers.details,
           emirate: answers.emirate,
           community: answers.community,
+          interests: answers.interests,
           name: answers.name,
           email: answers.email,
           phone: answers.phone,
@@ -481,17 +520,24 @@ export function LeadFlow({
       return;
     }
     if (done) return;
+    // On multi-select screens Enter continues (Space still toggles the focused option).
+    if (event.key === "Enter" && current.kind === "multi" && target.closest("[data-option]")) {
+      event.preventDefault();
+      next();
+      return;
+    }
     if (event.key === "Enter" && target.tagName !== "BUTTON" && target.tagName !== "A") {
       event.preventDefault();
       next();
       return;
     }
-    if (!typing && current.kind === "choice" && /^[a-z]$/i.test(event.key) && !event.metaKey && !event.ctrlKey) {
+    const letter = !typing && /^[a-z]$/i.test(event.key) && !event.metaKey && !event.ctrlKey;
+    if (letter && (current.kind === "choice" || current.kind === "multi")) {
       const option = current.options[event.key.toUpperCase().charCodeAt(0) - 65];
-      if (option) {
-        event.preventDefault();
-        choose(current, option.value);
-      }
+      if (!option) return;
+      event.preventDefault();
+      if (current.kind === "choice") choose(current, option.value);
+      else toggleInterest(option.value as Interest);
     }
   }
 
@@ -579,6 +625,14 @@ export function LeadFlow({
                       question={current}
                       value={valueOf(current.id)}
                       onChoose={(v) => choose(current, v)}
+                    />
+                  )}
+
+                  {current.kind === "multi" && (
+                    <MultiChoices
+                      question={current}
+                      values={answers.interests}
+                      onToggle={(v) => toggleInterest(v as Interest)}
                     />
                   )}
 
@@ -702,7 +756,11 @@ export function LeadFlow({
               <NavButton
                 label="Next question"
                 onClick={next}
-                disabled={current.kind === "review" || (current.kind === "choice" && !valueOf(current.id))}
+                disabled={
+                  current.kind === "review" ||
+                  (current.kind === "choice" && !valueOf(current.id)) ||
+                  (current.kind === "multi" && answers.interests.length === 0)
+                }
               >
                 <ChevronDown className="h-5 w-5" />
               </NavButton>
@@ -779,6 +837,55 @@ function Choices({
   );
 }
 
+function MultiChoices({
+  question,
+  values,
+  onToggle,
+}: {
+  question: Extract<Question, { kind: "multi" }>;
+  values: string[];
+  onToggle: (value: string) => void;
+}) {
+  return (
+    <>
+      <div role="group" aria-labelledby="flow-title" className="grid max-w-xl gap-2 sm:grid-cols-2">
+        {question.options.map((option, i) => {
+          const selected = values.includes(option.value);
+          return (
+            <button
+              key={option.value}
+              type="button"
+              data-autofocus={i === 0 ? "" : undefined}
+              data-option=""
+              aria-pressed={selected}
+              onClick={() => onToggle(option.value)}
+              className={cn(
+                "flex items-center gap-3 rounded-md border px-3 py-3 text-left text-[17px] transition-colors duration-200",
+                selected
+                  ? "border-charcoal bg-charcoal text-white"
+                  : "border-charcoal/20 bg-white/40 hover:border-charcoal/40 hover:bg-white/70",
+              )}
+            >
+              <span
+                className={cn(
+                  "grid h-7 w-7 shrink-0 place-items-center rounded-[4px] border text-xs font-semibold",
+                  selected ? "border-white/30 bg-white/10" : "border-charcoal/25 bg-white",
+                )}
+              >
+                {selected ? <Check className="h-3.5 w-3.5" /> : String.fromCharCode(65 + i)}
+              </span>
+              <span className="flex-1 leading-tight">{option.label}</span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-4 hidden text-xs text-slate sm:block">
+        Press letters or Space to select, then <strong className="font-semibold text-charcoal">Enter ↵</strong>
+      </p>
+    </>
+  );
+}
+
 function Community({
   emirate,
   value,
@@ -849,6 +956,11 @@ function Review({ answers, onEdit }: { answers: Answers; onEdit: (id: Question["
       label: "Location",
       value: [answers.community.trim(), labelFor(EMIRATES, answers.emirate)].filter(Boolean).join(", "),
     },
+    {
+      id: "interests",
+      label: "Help with",
+      value: answers.interests.map((v) => labelFor(INTERESTS, v)).join(", "),
+    },
     { id: "name", label: "Name", value: answers.name },
     { id: "email", label: "Email", value: answers.email },
     { id: "phone", label: "WhatsApp", value: answers.phone },
@@ -893,15 +1005,15 @@ function Done({
       </span>
       <h2
         id="flow-title"
-        data-autofocus
         tabIndex={-1}
         className="mt-6 text-[1.9rem] leading-[1.12] font-medium tracking-[-0.025em] outline-none sm:text-[2.7rem]"
       >
         You&apos;re all set{name ? `, ${name}` : ""}.
       </h2>
       <p className="mt-3 max-w-lg text-lg text-charcoal/65">
-        An advisor is preparing your {offerShort}. Expect it at <strong className="text-charcoal">{email}</strong>{" "}
-        within {site.reportTurnaround}.
+        Your {offerShort} is being prepared and will reach <strong className="text-charcoal">{email}</strong> within{" "}
+        {site.reportTurnaround}. Book a short call to walk through it — founding owners get their dashboard set up on
+        the same call.
       </p>
       <ol className="mt-8 max-w-lg space-y-3 rounded-2xl bg-white/60 p-5 text-sm">
         {next.map((item, i) => (
@@ -915,14 +1027,26 @@ function Done({
       </ol>
       <div className="mt-8 flex flex-wrap gap-3">
         <a
-          href={whatsappLink(`Hi Baytouna, I just requested my free ${offerShort}.`)}
+          data-autofocus
+          href={bookingLink(`Hi Baytouna, I just requested my free ${offerShort} and would like to book a call.`)}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => track("whatsapp_click", { location: "flow_success" })}
-          className="inline-flex h-12 items-center gap-2 rounded-md bg-charcoal px-5 text-sm font-medium text-white transition hover:bg-charcoal-700"
+          onClick={() => track("book_call_click", { location: "flow_success" })}
+          className="group inline-flex h-12 items-center gap-2.5 rounded-md bg-charcoal px-5 text-sm font-medium text-white transition hover:bg-charcoal-700"
         >
-          <MessageCircle className="h-4 w-4 text-olive-300" /> Chat on WhatsApp
+          <CalendarClock className="h-4 w-4 text-olive-300" /> Book your call
         </a>
+        {site.bookingUrl && (
+          <a
+            href={whatsappLink(`Hi Baytouna, I just requested my free ${offerShort}.`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => track("whatsapp_click", { location: "flow_success" })}
+            className="inline-flex h-12 items-center gap-2 rounded-md border border-charcoal/20 px-5 text-sm font-medium transition hover:border-charcoal/50"
+          >
+            <MessageCircle className="h-4 w-4" /> WhatsApp us
+          </a>
+        )}
         <button
           type="button"
           onClick={onClose}

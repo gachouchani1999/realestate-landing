@@ -1,19 +1,16 @@
-import { ChartLine, Compass, Handshake, KeyRound, Search, ShieldCheck, Sofa, Wrench, type LucideIcon } from "lucide-react";
+import { FileText, LayoutDashboard, PhoneCall, Settings2, Sparkles, type LucideIcon } from "lucide-react";
 import { JourneyTrack } from "@/components/JourneyTrack";
 import { PixelArt } from "@/components/pixels/PixelArt";
 import { CtaArrow, SectionHeading, buttonClass } from "@/components/ui";
-import { journey, ownerEntryStage, phases } from "@/content/landing";
+import { journey, phases } from "@/content/landing";
 import { cornerScatter } from "@/lib/pixels";
 
 const icons: Record<(typeof journey)[number]["icon"], LucideIcon> = {
-  compass: Compass,
-  search: Search,
-  shield: ShieldCheck,
-  handshake: Handshake,
-  sofa: Sofa,
-  key: KeyRound,
-  wrench: Wrench,
-  chart: ChartLine,
+  start: Sparkles,
+  report: FileText,
+  call: PhoneCall,
+  setup: Settings2,
+  track: LayoutDashboard,
 };
 
 const bandPixels = cornerScatter({
@@ -27,20 +24,20 @@ const bandPixels = cornerScatter({
 
 export function Journey() {
   return (
-    <section id="journey" className="scroll-mt-16 bg-mist py-24 sm:py-36">
+    <section id="how" className="scroll-mt-16 bg-mist py-24 sm:py-36">
       <div className="wrap">
         <div className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
           <SectionHeading
-            eyebrow="End-to-end"
+            eyebrow="How it works"
             title={
               <>
-                One partner. Every step. <span className="accent">From A to Z</span>
+                Free report first. <span className="accent">Then everything, tracked</span>
               </>
             }
           />
           <p data-reveal className="max-w-md text-lg leading-relaxed text-slate lg:pb-3">
-            Eight stages across three phases: acquire, operate, exit. Most owners join at stage 05, buyers start at
-            01 — either way, it&apos;s one team from start to finish.
+            Start with a free report on your property and a call to walk through it. Founding owners then get their
+            dashboard set up for them.
           </p>
         </div>
 
@@ -48,12 +45,12 @@ export function Journey() {
           <JourneyTrack stages={journey.length} phases={phases} />
         </div>
 
-        <ol className="mt-24 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {journey.map((stage, i) => {
-            const Icon = icons[stage.icon];
+        <ol className="mt-24 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {journey.map((step, i) => {
+            const Icon = icons[step.icon];
             return (
               <li
-                key={stage.title}
+                key={step.title}
                 data-reveal
                 className="group relative flex flex-col rounded-[28px] bg-white p-7 transition-colors duration-500 hover:bg-charcoal hover:text-white"
               >
@@ -65,16 +62,9 @@ export function Journey() {
                     <Icon className="h-5 w-5" strokeWidth={1.6} />
                   </span>
                 </div>
-                {i === ownerEntryStage ? (
-                  <span className="mt-8 self-start rounded-md bg-olive px-2.5 py-1 text-[11px] font-medium tracking-[0.08em] text-charcoal uppercase">
-                    Most owners start here
-                  </span>
-                ) : (
-                  <span className="mt-8 h-[26px]" aria-hidden />
-                )}
-                <h3 className="mt-6 text-xl font-medium tracking-tight">{stage.title}</h3>
+                <h3 className="mt-16 text-xl font-medium tracking-tight">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate transition-colors duration-500 group-hover:text-white/70">
-                  {stage.body}
+                  {step.body}
                 </p>
               </li>
             );
@@ -93,11 +83,11 @@ export function Journey() {
             className="pointer-events-none absolute right-0 bottom-0 h-[140px] w-[360px]"
           />
           <p className="relative max-w-xl text-xl leading-snug">
-            Not sure where to start?{" "}
-            <span className="text-white/60">Your free estimate maps out the next steps for your unit — at no cost.</span>
+            Founding owner spots are limited.{" "}
+            <span className="text-white/60">Start with a free report — it takes about a minute.</span>
           </p>
           <a href="#get-report" className={buttonClass("light", "lg", "relative")}>
-            Get my free estimate <CtaArrow />
+            Get my free report <CtaArrow />
           </a>
         </div>
       </div>

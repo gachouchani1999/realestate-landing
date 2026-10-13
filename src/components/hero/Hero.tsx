@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { Check } from "lucide-react";
+import { CalendarClock, Check } from "lucide-react";
 import { TowerScene } from "@/components/hero/TowerScene";
 import { LeadForm } from "@/components/LeadForm";
 import { PixelArt } from "@/components/pixels/PixelArt";
 import { CtaArrow, LightBars, buttonClass } from "@/components/ui";
+import { bookingLink } from "@/config/site";
 import { gsap, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
 import { cornerScatter } from "@/lib/pixels";
 
@@ -26,7 +27,7 @@ const bars = [
   { top: "78%", left: "14%", width: "80%", height: "16%" },
 ];
 
-const assurances = ["Free rental income estimate", "Handover to first rent", "Managed 100% remotely"];
+const assurances = ["One team for everything", "Licensed specialists", "Free property report"];
 
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -113,20 +114,20 @@ export function Hero() {
         {/* Copy */}
         <div className="hero-copy relative z-10 flex flex-col">
           <h1 data-hero className="hero-title headline text-[clamp(2.7rem,4.9vw,4.6rem)] text-charcoal lg:max-w-[11ch]">
-            Your UAE property partner, <span className="block text-olive-800">from A to Z</span>
+            Your UAE property, <span className="block text-olive-800">tracked from A to Z</span>
           </h1>
 
           <p data-hero="fade" className="mt-7 max-w-md text-lg leading-relaxed text-pretty text-charcoal/75">
-            Getting your keys or already own in the UAE? Baytouna turns your property into hands-free income — from
-            handover and furnishing to tenants, guests and everything after.
+            Your one-stop shop for UAE property. Our licensed partners handle everything — snagging, furnishing, tenants,
+            maintenance and sales — and your dashboard tracks it all. One team to message.
           </p>
 
           <div data-hero="fade" className="mt-9 flex flex-wrap items-center gap-3">
             <a href="#get-report" className={buttonClass("dark", "lg")}>
-              Get your free estimate <CtaArrow />
+              Get your free property report <CtaArrow />
             </a>
-            <a href="#calculator" className={buttonClass("outline", "lg", "lg:hidden")}>
-              Run the numbers
+            <a href={bookingLink()} target="_blank" rel="noopener noreferrer" className={buttonClass("outline", "lg")}>
+              <CalendarClock className="h-4 w-4" /> Book a call
             </a>
           </div>
 
@@ -142,14 +143,14 @@ export function Hero() {
           </ul>
 
           <a
-            href="#calculator"
+            href="#product"
             data-hero="pill"
             className="group mt-auto hidden w-[300px] items-center justify-between gap-6 rounded-lg bg-charcoal px-6 py-4 text-white transition-colors hover:bg-charcoal-700 lg:flex"
           >
             <span className="text-[17px] leading-snug">
-              See what your property
+              See the owner
               <br />
-              could earn
+              dashboard
             </span>
             <CtaArrow className="h-6 w-6" />
           </a>

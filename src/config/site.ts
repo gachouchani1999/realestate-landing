@@ -22,7 +22,7 @@ export const site = {
   shortName: "Baytouna",
   tagline: "Your Partner from A to Z",
   description:
-    "Baytouna turns UAE property into hands-free income for global owners — handover, furnishing, long-term or holiday-home management, and help buying or selling when the time is right.",
+    "Baytouna is the one-stop shop for UAE property owners: one team and one dashboard, with licensed specialists handling snagging, furnishing, tenants, maintenance and sales. Get a free property report for your unit.",
   url: resolveSiteUrl(),
   email: "hello@baytouna.ae", // placeholder — confirm this mailbox exists
   whatsapp: "971500000000", // placeholder — international format, digits only
@@ -30,8 +30,18 @@ export const site = {
   location: "Dubai, United Arab Emirates",
   coverage: "Dubai, Abu Dhabi and the Northern Emirates",
   reportTurnaround: "48 hours",
+  /** Calendly / Cal.com link for booking the report walkthrough call. Leave empty to book via WhatsApp. */
+  bookingUrl: "",
+  // TODO(before launch): legal details shown in the footer and team section.
+  legalName: "[Company legal name]",
+  licence: "IT licence no. [number]",
 } as const;
 
-export function whatsappLink(message = "Hi Baytouna, I'd like to know more about investing in the UAE.") {
+/** Where "Book a call" goes: the booking page if set, otherwise WhatsApp with a ready-made message. */
+export function bookingLink(message = "Hi Baytouna, I'd like to book a call about my property.") {
+  return site.bookingUrl || whatsappLink(message);
+}
+
+export function whatsappLink(message = "Hi Baytouna, I'd like to know more about the owner dashboard.") {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
 }
