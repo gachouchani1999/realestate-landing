@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** An arched doorway — the way in to UAE property. Used where a compact mark is needed. */
+/** An arched doorway — "Baytouna" means "our home". Used where a compact mark is needed. */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={className} aria-hidden>
@@ -18,9 +18,9 @@ export function LogoMark({ className }: { className?: string }) {
 
 export function Logo({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-start gap-1 font-display text-[22px] leading-none tracking-[0.02em]", className)}>
-      PROPORA
-      <span className="mt-[-2px] font-sans text-[9px] font-semibold tracking-[0.16em] opacity-70">UAE©</span>
+    <span className={cn("inline-flex items-baseline font-display text-[22px] leading-none tracking-[0.02em]", className)}>
+      BAYTOUNA
+      <span className="ml-px font-sans text-[13px] font-medium tracking-normal opacity-60">.ae</span>
     </span>
   );
 }

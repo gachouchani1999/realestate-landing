@@ -18,6 +18,12 @@ export function Footer() {
         <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <Logo className="text-white" />
+            <p className="mt-3 text-sm text-white/45">
+              <span lang="ar" dir="rtl" className="text-base text-white/60">
+                بيتنا
+              </span>{" "}
+              — &ldquo;our home&rdquo;
+            </p>
             <p className="mt-5 max-w-sm text-sm leading-relaxed">
               {site.tagline}. Handover, furnishing, long-term and holiday-home management for global owners of UAE
               property — and help buying or selling when the time is right.
@@ -79,9 +85,9 @@ export function Footer() {
       <p
         aria-hidden
         data-split
-        className="headline mt-10 mb-[-0.14em] text-center text-[20.5vw] leading-[0.8] tracking-[-0.03em] text-white/[0.06] select-none"
+        className="headline mt-10 mb-[-0.14em] text-center text-[16.5vw] leading-[0.8] tracking-[-0.03em] text-white/[0.06] select-none"
       >
-        Propora
+        Baytouna
       </p>
       <div className="h-24 sm:h-0" />
     </footer>

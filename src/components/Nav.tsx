@@ -90,7 +90,7 @@ export function Nav() {
         )}
       >
         <nav aria-label="Main" className="wrap flex h-20 items-center justify-between gap-6 text-charcoal">
-          <a href="#top" aria-label="Propora UAE — back to top">
+          <a href="#top" aria-label={`${site.name} — back to top`}>
             <Logo />
           </a>
           <div className="flex items-center gap-6">

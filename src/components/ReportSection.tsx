@@ -102,7 +102,7 @@ function EstimateMock() {
         <div className="absolute top-[2%] left-0 aspect-[3/4] w-[60%] -rotate-4 overflow-hidden rounded-[3cqw] bg-forest p-[5cqw] text-white shadow-[0_40px_80px_-30px_rgb(27_40_33/0.7)]">
           <PixelArt pixels={coverPixels} width={300} height={200} className="absolute top-0 right-0 h-[40cqw] w-[60cqw]" />
           <div className="relative flex h-full flex-col">
-            <p className="font-display text-[3.6cqw] leading-none tracking-[0.02em]">PROPORA</p>
+            <p className="font-display text-[3.6cqw] leading-none tracking-[0.02em]">BAYTOUNA</p>
             <p className="mt-[9cqw] text-[1.8cqw] tracking-[0.28em] text-olive-300 uppercase">Owner edition</p>
             <p className="headline mt-[2cqw] text-[5.4cqw]">
               Rental

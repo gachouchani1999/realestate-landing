@@ -49,7 +49,7 @@ export function LeadForm() {
           </span>
         </span>
         <span className="leading-tight">
-          <span className="block text-[15px] font-medium">Propora Advisory</span>
+          <span className="block text-[15px] font-medium">Baytouna Advisory</span>
           <span className="block text-sm text-slate">Free · Personalised</span>
         </span>
       </div>

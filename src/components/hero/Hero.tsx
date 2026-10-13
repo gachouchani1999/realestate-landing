@@ -117,7 +117,7 @@ export function Hero() {
           </h1>
 
           <p data-hero="fade" className="mt-7 max-w-md text-lg leading-relaxed text-pretty text-charcoal/75">
-            Getting your keys or already own in the UAE? Propora turns your property into hands-free income — from
+            Getting your keys or already own in the UAE? Baytouna turns your property into hands-free income — from
             handover and furnishing to tenants, guests and everything after.
           </p>
 

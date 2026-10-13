@@ -12,36 +12,36 @@ export const comparison = [
   {
     topic: "Handover",
     alone: "Flying in for snagging, utility connections and paperwork.",
-    propora: "Snagging, utilities and paperwork handled remotely, on your behalf.",
+    withUs: "Snagging, utilities and paperwork handled remotely, on your behalf.",
   },
   {
     topic: "Furnishing",
     alone: "Weeks of quotes and deliveries from thousands of kilometres away.",
-    propora: "A turnkey, rent-ready furnishing package at a fixed price.",
+    withUs: "A turnkey, rent-ready furnishing package at a fixed price.",
   },
   {
     topic: "Income",
     alone: "Chasing agents, viewings, cheques and guest messages.",
-    propora: "Screened long-term tenants or a fully run holiday home.",
+    withUs: "Screened long-term tenants or a fully run holiday home.",
   },
   {
     topic: "Upkeep",
     alone: "Late-night calls about air conditioning and leaks.",
-    propora: "One team handles maintenance, with photos and invoices.",
+    withUs: "One team handles maintenance, with photos and invoices.",
   },
   {
     topic: "Visibility",
     alone: "Updates only when someone remembers to message you.",
-    propora: "A live owner dashboard and quarterly performance reviews.",
+    withUs: "A live owner dashboard and quarterly performance reviews.",
   },
   {
     topic: "Next move",
     alone: "Guessing when to buy another unit, refinance or sell.",
-    propora: "Decisions made on your property's real performance data.",
+    withUs: "Decisions made on your property's real performance data.",
   },
 ];
 
-/** The three ways Propora works with clients — and how it is paid for each. */
+/** The three ways Baytouna works with clients — and how it is paid for each. */
 export const services = [
   {
     tag: "Start here",
@@ -214,7 +214,7 @@ export const faqs = [
     a: "Holiday homes can earn more in the right community, but income moves with the seasons and running costs are higher. Long-term lets are steadier and lower-effort. Your free estimate compares both for your specific unit, so you can choose on real numbers.",
   },
   {
-    q: "How does Propora charge?",
+    q: "How does Baytouna charge?",
     a: "Handover to income is a fixed package fee, quoted upfront. Long-term management is a percentage of the rent we actually collect, and holiday-home management is a share of booking revenue — so if your property isn't earning, neither are we. For buying and selling we charge a standard commission, always disclosed before you commit.",
   },
   {

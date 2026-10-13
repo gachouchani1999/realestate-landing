@@ -87,7 +87,7 @@ function buildQuestions(a: Answers, emailLocked: boolean, countryGuessed: boolea
     {
       id: "intent",
       kind: "choice",
-      title: "What brings you to Propora?",
+      title: "What brings you to Baytouna?",
       help: "Pick one — we'll tailor your free estimate.",
       options: INTENTS,
     },
@@ -915,7 +915,7 @@ function Done({
       </ol>
       <div className="mt-8 flex flex-wrap gap-3">
         <a
-          href={whatsappLink(`Hi Propora, I just requested my free ${offerShort}.`)}
+          href={whatsappLink(`Hi Baytouna, I just requested my free ${offerShort}.`)}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => track("whatsapp_click", { location: "flow_success" })}

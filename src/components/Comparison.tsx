@@ -20,13 +20,13 @@ export function Comparison() {
     <section className="bg-mist py-24 sm:py-36">
       <div className="wrap">
         <SectionHeading
-          eyebrow="Why Propora"
+          eyebrow="Why Baytouna"
           title={
             <>
               Owning from abroad shouldn&apos;t feel like <span className="accent">a second job</span>
             </>
           }
-          sub="Most overseas owners juggle developers, agents, furnishers and property managers — each with their own agenda. Propora replaces them with one accountable team."
+          sub="Most overseas owners juggle developers, agents, furnishers and property managers — each with their own agenda. Baytouna replaces them with one accountable team."
         />
 
         {/* Desktop: side-by-side */}
@@ -54,7 +54,7 @@ export function Comparison() {
           </div>
           <div className="relative flex items-center gap-2.5 px-10 pt-10 pb-6" style={{ gridColumn: 3, gridRow: 1 }}>
             <span className="h-2 w-2 bg-olive-300" />
-            <span className="text-[13px] font-medium tracking-[0.14em] text-white uppercase">With Propora</span>
+            <span className="text-[13px] font-medium tracking-[0.14em] text-white uppercase">With Baytouna</span>
           </div>
 
           {comparison.map((row, i) => (
@@ -79,7 +79,7 @@ export function Comparison() {
                 <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center bg-olive text-charcoal">
                   <Check className="h-3 w-3" strokeWidth={3} />
                 </span>
-                {row.propora}
+                {row.withUs}
               </div>
             </div>
           ))}
@@ -97,7 +97,7 @@ export function Comparison() {
                 <span className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center bg-olive text-charcoal">
                   <Check className="h-2.5 w-2.5" strokeWidth={3} />
                 </span>
-                {row.propora}
+                {row.withUs}
               </p>
             </li>
           ))}

@@ -42,7 +42,7 @@ export function Platform() {
         <div>
           <SectionHeading
             tone="dark"
-            eyebrow="The Propora platform"
+            eyebrow="The Baytouna platform"
             title={
               <>
                 Next&#8209;gen platform. <span className="accent">Old&#8209;school accountability</span>
@@ -156,7 +156,7 @@ const activity = [
 function DashboardMock() {
   return (
     <figure className="rounded-[30px] bg-white p-2 shadow-[0_50px_120px_-40px_rgb(0_0_0/0.6)]">
-      <figcaption className="sr-only">Preview of the Propora owner dashboard</figcaption>
+      <figcaption className="sr-only">Preview of the Baytouna owner dashboard</figcaption>
       <div aria-hidden className="overflow-hidden rounded-[24px] border border-line/70 bg-mist/60 text-charcoal">
         <div className="flex items-center justify-between border-b border-line/70 bg-white px-4 py-3 sm:px-5">
           <div className="flex items-center gap-2">

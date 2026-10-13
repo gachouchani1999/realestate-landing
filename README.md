@@ -1,6 +1,6 @@
-# Propora UAE — landing page
+# Baytouna.ae — landing page
 
-Lead-generation landing page for Propora UAE: "Your Partner from A to Z". Next.js 16, Tailwind CSS 4 and GSAP.
+Lead-generation landing page for Baytouna.ae: "Your Partner from A to Z". Next.js 16, Tailwind CSS 4 and GSAP.
 
 The page is owner-first: the main offer is a free rental income estimate for people getting their keys or who
 already own. Buyers (free investment report) and sellers (free valuation) have their own path through the same form.

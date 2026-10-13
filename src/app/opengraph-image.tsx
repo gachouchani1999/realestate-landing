@@ -34,7 +34,10 @@ export default function OpengraphImage() {
           style={{ position: "absolute", top: y * 44, right: (5 - x) * 44, width: 44, height: 44, background: fill }}
         />
       ))}
-      <div style={{ display: "flex", fontSize: 34, letterSpacing: 1 }}>PROPORA</div>
+      <div style={{ display: "flex", alignItems: "baseline", fontSize: 34, letterSpacing: 1 }}>
+        BAYTOUNA
+        <span style={{ fontSize: 22, opacity: 0.6, fontFamily: "sans-serif", letterSpacing: 0 }}>.ae</span>
+      </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", fontSize: 92, lineHeight: 0.96, maxWidth: 900 }}>YOUR UAE PROPERTY PARTNER,</div>
         <div style={{ display: "flex", fontSize: 92, lineHeight: 0.96, color: "#5b5e36" }}>FROM A TO Z</div>

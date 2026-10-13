@@ -99,7 +99,7 @@ export const OFFERS: Record<Intent, { title: string; short: string; cta: string;
     next: [
       "We review your unit, current setup and comparable rentals",
       "Your estimate arrives — long-term vs holiday home, side by side",
-      "Optional: a 20-minute call about switching to Propora",
+      "Optional: a 20-minute call about switching to Baytouna",
     ],
   },
   buy: {
