@@ -29,8 +29,8 @@ export function CookieBanner() {
           <Cookie className="h-4.5 w-4.5" strokeWidth={1.75} />
         </span>
         <p className="text-sm leading-relaxed text-charcoal/80">
-          We&apos;d like to use Google Analytics cookies to see how people find and use Baytouna. No ads, and we never
-          sell your data.
+          We&apos;d like to use cookies from Google Analytics and Meta to see how people find Baytouna and to measure
+          our ads. We never sell your data.
         </p>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2">

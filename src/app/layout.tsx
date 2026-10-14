@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Inter_Tight, Newsreader } from "next/font/google";
 import { Analytics } from "@/components/analytics/Analytics";
 import { CookieBanner } from "@/components/analytics/CookieBanner";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { site } from "@/config/site";
 import "./globals.css";
 
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         {children}
         <CookieBanner />
         <Analytics />
+        <MetaPixel />
       </body>
     </html>
   );

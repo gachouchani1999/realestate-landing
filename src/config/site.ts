@@ -16,7 +16,6 @@ function resolveSiteUrl() {
 }
 
 // Business details used across the landing page.
-// TODO(before launch): replace the placeholder contact details below.
 export const site = {
   name: "Baytouna.ae",
   shortName: "Baytouna",
@@ -25,8 +24,8 @@ export const site = {
     "Baytouna is the one-stop shop for UAE property owners: one team and one dashboard, with licensed specialists handling snagging, furnishing, tenants, maintenance and sales. Get a free property report for your unit.",
   url: resolveSiteUrl(),
   email: "hello@baytouna.ae",
-  whatsapp: "971500000000", // placeholder — international format, digits only
-  phoneDisplay: "+971 50 000 0000", // placeholder
+  whatsapp: "971526692426", // international format, digits only
+  phoneDisplay: "+971 52 669 2426",
   location: "Dubai, United Arab Emirates",
   coverage: "Dubai, Abu Dhabi and the Northern Emirates",
   reportTurnaround: "48 hours",
@@ -34,6 +33,8 @@ export const site = {
   bookingUrl: "",
   /** Google Analytics 4 measurement ID. Loads only in production and only after cookie consent. */
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-V387M4WQX6",
+  /** Meta Pixel ID. Loads only in production and only after cookie consent. */
+  metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID || "4093844800921406",
 } as const;
 
 /** Where "Book a call" goes: the booking page if set, otherwise WhatsApp with a ready-made message. */

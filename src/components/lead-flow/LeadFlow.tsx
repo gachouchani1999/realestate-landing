@@ -27,7 +27,7 @@ import {
 } from "@/lib/leads";
 import { COMMUNITIES, COUNTRIES, guessCountry } from "@/lib/locations";
 import { cornerScatter } from "@/lib/pixels";
-import { cn, track } from "@/lib/utils";
+import { cn, track, trackMeta } from "@/lib/utils";
 
 type Option = { value: string; label: string; hint?: string };
 type ChoiceId = "intent" | DetailField | "emirate";
@@ -499,6 +499,7 @@ export function LeadFlow({
         throw new Error(data.error ?? "Something went wrong. Please try again.");
       }
       track("generate_lead", { intent: answers.intent, emirate: answers.emirate, ...answers.details });
+      trackMeta("Lead", { content_category: answers.intent });
       window.clearTimeout(saveTimer.current);
       setDirection(1);
       setDone(true);

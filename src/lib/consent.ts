@@ -2,7 +2,8 @@
 
 import { useSyncExternalStore } from "react";
 
-// Analytics consent, remembered per browser. Without a stored choice the banner shows and no analytics load.
+// Cookie consent (analytics + advertising), remembered per browser. Without a stored choice the banner shows and
+// neither Google Analytics nor the Meta Pixel loads.
 const KEY = "baytouna-consent";
 export type Consent = "granted" | "denied" | "unset";
 
@@ -38,10 +39,11 @@ export function setConsent(value: Exclude<Consent, "unset">) {
     // Storage blocked (private mode etc.): the choice holds for this page view only.
   }
   if (value === "denied") {
-    // Withdrawing consent: stop Google Analytics and remove its cookies.
+    // Withdrawing consent: stop Google Analytics and the Meta Pixel, and remove their cookies.
     window.gtag?.("consent", "update", { analytics_storage: "denied" });
+    window.fbq?.("consent", "revoke");
     for (const name of document.cookie.split(";").map((c) => c.split("=")[0]?.trim())) {
-      if (!name?.startsWith("_ga")) continue;
+      if (!name || !/^(_ga|_fbp|_fbc)/.test(name)) continue;
       const domain = window.location.hostname.split(".").slice(-2).join(".");
       document.cookie = `${name}=; Max-Age=0; path=/`;
       document.cookie = `${name}=; Max-Age=0; path=/; domain=.${domain}`;

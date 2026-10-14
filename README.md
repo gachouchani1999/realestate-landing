@@ -75,14 +75,19 @@ builds and only after the visitor clicks **Accept** on the cookie banner; declin
 settings" in the footer) keeps it off and clears `_ga` cookies. Code: `src/components/analytics/`, `src/lib/consent.ts`.
 In GA4, mark `generate_lead` and `book_call_click` as key events.
 
+**Meta Pixel** (`4093844800921406`, also in `src/config/site.ts`) follows the same consent: it loads only after
+**Accept**, sends `PageView`, `Lead` (after a successful form submission) and `Contact` (any WhatsApp link click),
+and is revoked with its `_fbp` cookie removed if the visitor declines. There is deliberately no `<noscript>` fallback,
+since it would track visitors before they could consent.
+
 Conversion events (`lead_flow_open`, `lead_flow_step`, `lead_form_start`, `generate_lead`, `calculator_used`, `calculator_strategy`, `book_call_click`, `whatsapp_click`) are pushed to `window.dataLayer` / `gtag` when Google Tag Manager or GA4 is installed.
 
 See `.env.example` for all environment variables.
 
 ## Before launch
 
-- Replace the placeholder WhatsApp number and phone in `src/config/site.ts`, and
-  add a `bookingUrl` (Calendly / Cal.com) if you want calls booked on a calendar instead of WhatsApp.
+- Add a `bookingUrl` (Calendly / Cal.com) in `src/config/site.ts` if you want calls booked on a calendar instead of
+  WhatsApp.
 - Confirm the market facts, services, fee descriptions, FAQ answers and estimate contents in `src/content/landing.ts`.
 - Check the calculator presets match your real long-term and holiday-home numbers.
 - Make sure you hold the licences each service needs (RERA for brokerage and leasing, DET for holiday homes).
