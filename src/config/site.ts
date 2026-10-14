@@ -33,6 +33,8 @@ export const site = {
   bookingUrl: "",
   /** Google Analytics 4 measurement ID. Loads only in production and only after cookie consent. */
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-V387M4WQX6",
+  /** Google Ads tag ID. Shares the GA4 Google tag; same production-only, consent-gated loading. */
+  googleAdsId: process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "AW-18511825797",
   /** Meta Pixel ID. Loads only in production and only after cookie consent. */
   metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID || "4093844800921406",
 } as const;

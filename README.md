@@ -75,6 +75,10 @@ builds and only after the visitor clicks **Accept** on the cookie banner; declin
 settings" in the footer) keeps it off and clears `_ga` cookies. Code: `src/components/analytics/`, `src/lib/consent.ts`.
 In GA4, mark `generate_lead` and `book_call_click` as key events.
 
+**Google Ads tag** (`AW-18511825797`, in `src/config/site.ts`) shares the same Google tag as GA4 and the same
+consent; Accept grants Google's ad consent signals, Decline revokes them and clears `_gcl` cookies. For conversions,
+either import GA4's `generate_lead` into Google Ads or add an Ads conversion label.
+
 **Meta Pixel** (`4093844800921406`, also in `src/config/site.ts`) follows the same consent: it loads only after
 **Accept**, sends `PageView`, `Lead` (after a successful form submission) and `Contact` (any WhatsApp link click),
 and is revoked with its `_fbp` cookie removed if the visitor declines. There is deliberately no `<noscript>` fallback,

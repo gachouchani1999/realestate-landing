@@ -5,23 +5,24 @@ import { site } from "@/config/site";
 import { useConsent } from "@/lib/consent";
 
 /**
- * Google Analytics 4. Loads only in production builds and only after the visitor accepts analytics cookies;
- * the site's `track()` events (lead_flow_open, generate_lead, book_call_click, …) then flow to GA4.
+ * Google tag: GA4 and Google Ads share one gtag.js load. Loads only in production builds and only after the visitor
+ * accepts cookies; the site's `track()` events (lead_flow_open, generate_lead, book_call_click, …) then flow to GA4,
+ * and the Ads tag can measure conversions and build remarketing audiences.
  */
 export function Analytics() {
   const consent = useConsent();
-  const id = site.gaMeasurementId;
-  if (!id || process.env.NODE_ENV !== "production" || consent !== "granted") return null;
+  const ids = [site.gaMeasurementId, site.googleAdsId].filter(Boolean);
+  if (ids.length === 0 || process.env.NODE_ENV !== "production" || consent !== "granted") return null;
 
   return (
     <>
-      <Script src={`https://www.googletagmanager.com/gtag/js?id=${id}`} strategy="afterInteractive" />
-      <Script id="ga4-init" strategy="afterInteractive">
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${ids[0]}`} strategy="afterInteractive" />
+      <Script id="google-tag-init" strategy="afterInteractive">
         {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' });
 gtag('js', new Date());
-gtag('config', '${id}');`}
+${ids.map((id) => `gtag('config', '${id}');`).join("\n")}`}
       </Script>
     </>
   );
