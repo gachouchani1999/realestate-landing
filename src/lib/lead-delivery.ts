@@ -53,9 +53,13 @@ export async function deliver(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(8000),
+        // Google Apps Script can take a few seconds on a cold start.
+        signal: AbortSignal.timeout(15000),
       });
       if (!res.ok) throw new Error(`Webhook responded ${res.status}`);
+      // Some receivers (e.g. the Google Sheets script) always answer 200 and report failures in the body.
+      const body = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+      if (body?.ok === false) throw new Error(`Webhook rejected the lead: ${body.error ?? "unknown error"}`);
       return "sent";
     } catch (err) {
       console.error(`[${label}] webhook delivery failed`, err);

@@ -57,6 +57,23 @@ with people who don't finish:
 Visitors are told their answers are saved as they go (hero card and email question). Mention it in your privacy
 policy too.
 
+## Lead inbox: Google Sheet
+
+`scripts/google-sheets-lead-inbox.gs` turns a Google Sheet into the lead inbox: one row per attempt ("Started — not
+finished" rows become "Submitted" when the visitor finishes), an email to hello@baytouna.ae for every submitted lead,
+and "Contacted?" / "Notes" columns for the team.
+
+1. Create a Google Sheet (e.g. "Baytouna leads") with the account that should own the leads.
+2. **Extensions → Apps Script**, replace the editor contents with the script, and set `SECRET` to a long random string.
+3. Pick `setup` in the function menu and click **Run**; approve the permissions (Sheets + send email). A "Leads" tab
+   appears and a test email arrives.
+4. **Deploy → New deployment → Web app** — *Execute as:* Me, *Who has access:* Anyone. Copy the web app URL.
+5. In Vercel, set `LEAD_WEBHOOK_URL` to `<web app URL>?token=<SECRET>` (Production), then redeploy.
+6. Submit a test lead on the live site and check the sheet and inbox. Delete the test row afterwards.
+
+If you edit the script later, use **Deploy → Manage deployments → Edit → New version** so the URL stays the same.
+A wrong or missing token makes the site show "couldn't submit, please retry" rather than losing leads silently.
+
 ## Leads
 
 Every submission is validated, logged, and then:
