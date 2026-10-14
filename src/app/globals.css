@@ -157,6 +157,84 @@
   outline-offset: 8px;
 }
 
+/* Long-form article typography (blog). Blocks marked .not-article keep their own styles. */
+@layer components {
+  .article {
+    color: color-mix(in oklab, var(--color-charcoal) 88%, transparent);
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+  .article > * + * {
+    margin-top: 1.4em;
+  }
+  .article :where(h2):not(.not-article *) {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+    color: var(--color-charcoal);
+    margin-top: 2.4em;
+    scroll-margin-top: 6rem;
+  }
+  .article :where(h3):not(.not-article *) {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+    color: var(--color-charcoal);
+    margin-top: 1.8em;
+    scroll-margin-top: 6rem;
+  }
+  .article :where(h2 + p, h3 + p):not(.not-article *) {
+    margin-top: 0.8em;
+  }
+  .article :where(ul):not(.not-article *) {
+    list-style: none;
+    padding-left: 0;
+  }
+  .article :where(ul > li):not(.not-article *) {
+    position: relative;
+    padding-left: 1.6em;
+  }
+  .article :where(ul > li):not(.not-article *)::before {
+    content: "";
+    position: absolute;
+    left: 0.2em;
+    top: 0.72em;
+    width: 0.45em;
+    height: 0.45em;
+    background: var(--color-olive-600);
+  }
+  .article :where(li + li):not(.not-article *) {
+    margin-top: 0.55em;
+  }
+  .article :where(a):not(.not-article *) {
+    color: var(--color-charcoal);
+    text-decoration: underline;
+    text-decoration-color: var(--color-olive);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s;
+  }
+  .article :where(a):not(.not-article *):hover {
+    text-decoration-color: var(--color-charcoal);
+  }
+  .article :where(strong):not(.not-article *) {
+    font-weight: 600;
+    color: var(--color-charcoal);
+  }
+  .article .article-note {
+    margin-top: 3em;
+    border-top: 1px solid color-mix(in oklab, var(--color-charcoal) 12%, transparent);
+    padding-top: 1.5em;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-slate);
+  }
+}
+
 details > summary {
   list-style: none;
 }

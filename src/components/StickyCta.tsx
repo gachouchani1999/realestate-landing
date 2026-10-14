@@ -11,11 +11,11 @@ export function StickyCta() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // On the homepage the bar appears once the hero form is out of view; elsewhere (the blog) after a short scroll.
     const form = document.getElementById("get-report");
     const finalCta = document.getElementById("final-cta");
-    if (!form) return;
     const update = () => {
-      const pastForm = form.getBoundingClientRect().bottom < 0;
+      const pastForm = form ? form.getBoundingClientRect().bottom < 0 : window.scrollY > 600;
       const cta = finalCta?.getBoundingClientRect();
       const ctaInView = cta ? cta.top < window.innerHeight && cta.bottom > 0 : false;
       setVisible(pastForm && !ctaInView);

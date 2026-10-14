@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Mail, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PixelArt } from "@/components/pixels/PixelArt";
@@ -10,11 +11,13 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import { cornerScatter } from "@/lib/pixels";
 import { cn } from "@/lib/utils";
 
+// Absolute paths so the menu also works from the blog; on the homepage they jump within the page.
 const links = [
-  { href: "#product", label: "The dashboard" },
-  { href: "#how", label: "How it works" },
-  { href: "#report", label: "Free report" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/#product", label: "The dashboard" },
+  { href: "/#how", label: "How it works" },
+  { href: "/#report", label: "Free report" },
+  { href: "/blog", label: "Blog" },
+  { href: "/#faq", label: "FAQ" },
 ];
 
 const COLS = 12;
@@ -89,9 +92,9 @@ export function Nav() {
         )}
       >
         <nav aria-label="Main" className="wrap flex h-20 items-center justify-between gap-6 text-charcoal">
-          <a href="#top" aria-label={`${site.name} — back to top`}>
+          <Link href="/#top" aria-label={`${site.name} — home`}>
             <Logo />
-          </a>
+          </Link>
           <div className="flex items-center gap-6">
             <a
               href="#get-report"
@@ -159,14 +162,14 @@ export function Nav() {
             <ol className="space-y-1">
               {links.map((link, i) => (
                 <li key={link.href} className="overflow-hidden">
-                  <a
+                  <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
                     className="menu-link group flex items-baseline gap-5 py-1 transition-colors hover:text-olive-300"
                   >
                     <span className="w-8 text-sm text-white/40 tabular-nums">0{i + 1}</span>
                     <span className="headline text-[clamp(2.4rem,6vw,5rem)]">{link.label}</span>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ol>

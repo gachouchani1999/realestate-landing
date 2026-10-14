@@ -1,14 +1,16 @@
+import Link from "next/link";
 import { Mail, MapPin, MessageCircle } from "lucide-react";
 import { CookieSettingsButton } from "@/components/analytics/CookieBanner";
 import { Logo } from "@/components/Logo";
 import { site, whatsappLink } from "@/config/site";
 
 const explore = [
-  { href: "#product", label: "The dashboard" },
-  { href: "#how", label: "How it works" },
-  { href: "#report", label: "Free report" },
-  { href: "#calculator", label: "Income estimate" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/#product", label: "The dashboard" },
+  { href: "/#how", label: "How it works" },
+  { href: "/#report", label: "Free report" },
+  { href: "/#calculator", label: "Income estimate" },
+  { href: "/blog", label: "Blog" },
+  { href: "/#faq", label: "FAQ" },
 ];
 
 export function Footer() {
@@ -34,9 +36,9 @@ export function Footer() {
             <ul className="mt-5 space-y-2.5 text-sm">
               {explore.map((link) => (
                 <li key={link.href}>
-                  <a href={link.href} className="transition-colors hover:text-white">
+                  <Link href={link.href} className="transition-colors hover:text-white">
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
