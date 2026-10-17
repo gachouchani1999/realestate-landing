@@ -46,16 +46,9 @@ export const viewport: Viewport = {
   themeColor: "#c8d1cd",
 };
 
-// Runs before first paint: hides animated elements until GSAP takes over, and
-// un-hides everything if the motion layer hasn't started within 4 seconds.
-const motionGuard = `(function(){var d=document.documentElement;d.classList.add('js');setTimeout(function(){if(!d.classList.contains('motion-ready'))d.classList.remove('js')},4000)})()`;
-
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${interTight.variable} ${newsreader.variable} antialiased`}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: motionGuard }} />
-      </head>
       <body>
         {children}
         <CookieBanner />

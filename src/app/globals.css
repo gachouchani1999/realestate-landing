@@ -87,15 +87,6 @@
 }
 
 /*
- * Motion: `js` is set by an inline script before first paint, so animated elements never flash.
- * GSAP reveals them; if it never initialises, the head script removes `js` and everything shows.
- */
-.js [data-reveal],
-.js [data-split] {
-  visibility: hidden;
-}
-
-/*
  * Hero entrance: plain CSS so it plays on first paint instead of waiting for JavaScript (slow on phones).
  * `backwards` holds the start state during each delay, then hands the element back to its normal styles,
  * so the GSAP drift and parallax that start later aren't overridden.

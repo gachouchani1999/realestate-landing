@@ -42,8 +42,13 @@ export function Nav() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
+    // Browsers restore the scroll position on reload, so check once on load too.
+    const frame = requestAnimationFrame(onScroll);
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useGSAP(
