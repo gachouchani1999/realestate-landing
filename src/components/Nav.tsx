@@ -92,7 +92,7 @@ export function Nav() {
         )}
       >
         <nav aria-label="Main" className="wrap flex h-20 items-center justify-between gap-6 text-charcoal">
-          <Link href="/#top" aria-label={`${site.name} — home`}>
+          <Link href="/#top" prefetch={false} aria-label={`${site.name} — home`}>
             <Logo />
           </Link>
           <div className="flex items-center gap-6">
@@ -136,6 +136,7 @@ export function Nav() {
 
         <div className="menu-panel absolute inset-0 overflow-y-auto bg-forest text-white">
           <PixelArt
+            animated
             pixels={menuPixels}
             width={480}
             height={320}
@@ -164,6 +165,7 @@ export function Nav() {
                 <li key={link.href} className="overflow-hidden">
                   <Link
                     href={link.href}
+                    prefetch={link.href.startsWith("/#") ? false : undefined}
                     onClick={() => setOpen(false)}
                     className="menu-link group flex items-baseline gap-5 py-1 transition-colors hover:text-olive-300"
                   >

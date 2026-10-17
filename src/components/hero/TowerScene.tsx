@@ -1,5 +1,9 @@
+"use client";
+
+// A client component on purpose: the browser draws the tower from a few lines of code instead of
+// downloading its whole SVG a second time inside the page's React data.
 import type { CSSProperties } from "react";
-import { PixelRects } from "@/components/pixels/PixelArt";
+import { PixelPaths } from "@/components/pixels/PixelArt";
 import { foliagePixels, seeded } from "@/lib/pixels";
 
 const foliage = foliagePixels(11);
@@ -23,7 +27,8 @@ const windows = FLOORS.flatMap((y) =>
 
 /**
  * A slender twin-fin tower wrapped in a pixel-mosaic canopy.
- * Static SVG; the hero animates `.tower-body`, `.px` and `.window-glow` elements.
+ * Static SVG; the hero entrance (CSS) grows `.tower-ground`, `.tower-body` and `.tower-foliage`,
+ * and lit windows and some pixels twinkle.
  */
 export function TowerScene({ className }: { className?: string }) {
   return (
@@ -67,7 +72,7 @@ export function TowerScene({ className }: { className?: string }) {
 
       {/* Canopy behind the tower */}
       <g className="tower-foliage" shapeRendering="crispEdges">
-        <PixelRects pixels={foliageBack} />
+        <PixelPaths pixels={foliageBack} />
       </g>
 
       {/* Tower */}
@@ -113,7 +118,7 @@ export function TowerScene({ className }: { className?: string }) {
 
       {/* Shrubs in front */}
       <g className="tower-foliage" shapeRendering="crispEdges">
-        <PixelRects pixels={foliageFront} />
+        <PixelPaths pixels={foliageFront} />
       </g>
     </svg>
   );

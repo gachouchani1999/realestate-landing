@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import type { Pixel } from "@/lib/pixels";
+import { mergePixels, type Pixel } from "@/lib/pixels";
 
 /** Renders pixels as SVG rects. Rects carry the `px` class so GSAP can animate them in. */
 export function PixelRects({ pixels }: { pixels: Pixel[] }) {
@@ -27,6 +27,19 @@ export function PixelRects({ pixels }: { pixels: Pixel[] }) {
   ));
 }
 
+/** Renders still pixels as one path per colour (far lighter for the browser); twinkling pixels stay as rects. */
+export function PixelPaths({ pixels }: { pixels: Pixel[] }) {
+  const { shapes, twinkles } = mergePixels(pixels);
+  return (
+    <>
+      {shapes.map((s) => (
+        <path key={`${s.fill}-${s.opacity}`} d={s.d} fill={s.fill} opacity={s.opacity === 1 ? undefined : s.opacity} />
+      ))}
+      <PixelRects pixels={twinkles} />
+    </>
+  );
+}
+
 export function PixelArt({
   pixels,
   width,
@@ -34,6 +47,7 @@ export function PixelArt({
   className,
   preserveAspectRatio,
   reveal,
+  animated,
 }: {
   pixels: Pixel[];
   width: number;
@@ -42,6 +56,8 @@ export function PixelArt({
   preserveAspectRatio?: string;
   /** Pop the pixels in when scrolled into view (handled by MotionRoot). */
   reveal?: boolean;
+  /** Keep one element per pixel so a parent can animate them individually. */
+  animated?: boolean;
 }) {
   return (
     <svg
@@ -52,7 +68,7 @@ export function PixelArt({
       shapeRendering="crispEdges"
       data-pixels={reveal ? "" : undefined}
     >
-      <PixelRects pixels={pixels} />
+      {reveal || animated ? <PixelRects pixels={pixels} /> : <PixelPaths pixels={pixels} />}
     </svg>
   );
 }

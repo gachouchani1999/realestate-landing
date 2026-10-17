@@ -25,6 +25,27 @@ export type Pixel = {
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
 
+/**
+ * Merges still pixels into one path per colour, so a mosaic costs a handful of elements instead of hundreds.
+ * Twinkling pixels stay separate so they can keep animating. Pixels sit on a grid and never overlap,
+ * so drawing order doesn't matter.
+ */
+export function mergePixels(pixels: Pixel[]) {
+  const shapes = new Map<string, { fill: string; opacity: number; d: string }>();
+  const twinkles: Pixel[] = [];
+  for (const p of pixels) {
+    if (p.twinkle) {
+      twinkles.push(p);
+      continue;
+    }
+    const key = `${p.fill}|${p.opacity}`;
+    const shape = shapes.get(key) ?? { fill: p.fill, opacity: p.opacity, d: "" };
+    shape.d += `M${p.x} ${p.y}h${p.size}v${p.size}h-${p.size}z`;
+    shapes.set(key, shape);
+  }
+  return { shapes: [...shapes.values()], twinkles };
+}
+
 /** Scatter that thins out with distance from an anchor corner — the "dissolving" edge motif. */
 export function cornerScatter({
   width,

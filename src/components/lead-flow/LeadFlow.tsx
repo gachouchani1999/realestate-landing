@@ -570,6 +570,7 @@ export function LeadFlow({
 
       <div className="flow-panel absolute inset-0 flex flex-col overflow-y-auto bg-sage text-charcoal">
         <PixelArt
+          animated
           pixels={cornerPixels}
           width={480}
           height={320}

@@ -36,7 +36,11 @@ export function Footer() {
             <ul className="mt-5 space-y-2.5 text-sm">
               {explore.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="transition-colors hover:text-white">
+                  <Link
+                    href={link.href}
+                    prefetch={link.href.startsWith("/#") ? false : undefined}
+                    className="transition-colors hover:text-white"
+                  >
                     {link.label}
                   </Link>
                 </li>

@@ -31,8 +31,7 @@ export function LeadForm() {
   return (
     <div
       id="get-report"
-      data-hero="card"
-      className="relative scroll-mt-28 overflow-hidden rounded-[36px] bg-white p-6 text-charcoal shadow-[0_40px_100px_-40px_rgb(27_40_33/0.45)] sm:p-8"
+      className="hero-card relative scroll-mt-28 overflow-hidden rounded-[36px] bg-white p-6 text-charcoal shadow-[0_40px_100px_-40px_rgb(27_40_33/0.45)] sm:p-8"
     >
       <PixelArt
         pixels={palm}

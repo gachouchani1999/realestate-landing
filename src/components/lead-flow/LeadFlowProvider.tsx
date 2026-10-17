@@ -1,8 +1,11 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { LeadFlow } from "@/components/lead-flow/LeadFlow";
+import dynamic from "next/dynamic";
 import { track } from "@/lib/utils";
+
+// The full-screen form is a big chunk of code nobody needs for the first paint, so it loads once the page is idle.
+const LeadFlow = dynamic(() => import("@/components/lead-flow/LeadFlow").then((m) => m.LeadFlow), { ssr: false });
 
 type LeadFlowContextValue = {
   /** Opens the full-screen form, optionally with the email already captured. */
@@ -21,13 +24,26 @@ export function useLeadFlow() {
 
 export function LeadFlowProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [prefilledEmail, setPrefilledEmail] = useState<string | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const openFlow = useCallback((email?: string) => {
     if (email) setPrefilledEmail(email);
+    setLoaded(true);
     setOpen(true);
     track("lead_flow_open", { from: email ? "hero_email" : "cta" });
+  }, []);
+
+  useEffect(() => {
+    const load = () => setLoaded(true);
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(load, { timeout: 3000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    // Safari has no requestIdleCallback.
+    const id = setTimeout(load, 1500);
+    return () => clearTimeout(id);
   }, []);
 
   // Every "#get-report" call to action on the page opens the flow instead of scrolling.
@@ -48,12 +64,14 @@ export function LeadFlowProvider({ children }: { children: ReactNode }) {
   return (
     <LeadFlowContext.Provider value={value}>
       {children}
-      <LeadFlow
-        open={open}
-        prefilledEmail={prefilledEmail}
-        onClose={() => setOpen(false)}
-        onSubmitted={(email) => setSubmittedEmail(email)}
-      />
+      {loaded && (
+        <LeadFlow
+          open={open}
+          prefilledEmail={prefilledEmail}
+          onClose={() => setOpen(false)}
+          onSubmitted={(email) => setSubmittedEmail(email)}
+        />
+      )}
     </LeadFlowContext.Provider>
   );
 }
