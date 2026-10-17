@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { site } from "@/config/site";
 
 // Cookie consent (analytics + advertising), remembered per browser. Without a stored choice the banner shows and
 // none of Google Analytics, Google Ads or the Meta Pixel loads.
@@ -37,6 +38,20 @@ export function setConsent(value: Exclude<Consent, "unset">) {
     window.localStorage.setItem(KEY, value);
   } catch {
     // Storage blocked (private mode etc.): the choice holds for this page view only.
+  }
+  // gtag's opt-out flag: without it, already-loaded tags still flush queued events (scroll, engagement) on page exit.
+  const tagIds = [site.gaMeasurementId, site.googleAdsId].filter(Boolean);
+  for (const id of tagIds) (window as unknown as Record<string, boolean>)[`ga-disable-${id}`] = value === "denied";
+
+  // Changing back within the same page view: resume the tags that are already loaded.
+  if (value === "granted") {
+    window.gtag?.("consent", "update", {
+      analytics_storage: "granted",
+      ad_storage: "granted",
+      ad_user_data: "granted",
+      ad_personalization: "granted",
+    });
+    window.fbq?.("consent", "grant");
   }
   if (value === "denied") {
     // Withdrawing consent: stop Google Analytics, Google Ads and the Meta Pixel, and remove their cookies.

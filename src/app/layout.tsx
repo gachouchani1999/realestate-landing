@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Inter_Tight, Newsreader } from "next/font/google";
+import { Inter_Tight } from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@/components/analytics/Analytics";
 import { CookieBanner } from "@/components/analytics/CookieBanner";
 import { MetaPixel } from "@/components/analytics/MetaPixel";
@@ -12,10 +13,15 @@ const interTight = Inter_Tight({
   subsets: ["latin"],
 });
 
-const newsreader = Newsreader({
+// Newsreader (SIL Open Font License) from Google Fonts, trimmed to the only weight the site uses (400)
+// while keeping the optical-size axis that refines big headlines: 57KB instead of 132KB.
+const newsreader = localFont({
+  src: "./fonts/newsreader-latin-400-opsz.woff2",
   variable: "--font-newsreader",
-  subsets: ["latin"],
-  axes: ["opsz"],
+  weight: "400",
+  style: "normal",
+  display: "swap",
+  adjustFontFallback: "Times New Roman",
 });
 
 const title = `${site.name} — The owner dashboard for UAE property, from A to Z`;

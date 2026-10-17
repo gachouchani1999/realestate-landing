@@ -11,6 +11,16 @@ export function CookieBanner() {
 
   useEffect(() => onOpenCookieSettings(() => setReopened(true)), []);
 
+  // Meta's automatic click tracking would otherwise report the Decline click itself. This window-level capture
+  // listener runs before Meta's, so its consent is withdrawn before it sees the click.
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      if ((event.target as Element | null)?.closest?.("[data-consent-decline]")) window.fbq?.("consent", "revoke");
+    };
+    window.addEventListener("click", onClick, true);
+    return () => window.removeEventListener("click", onClick, true);
+  }, []);
+
   if (consent === "server" || (consent !== "unset" && !reopened)) return null;
 
   function choose(value: "granted" | "denied") {
@@ -36,6 +46,7 @@ export function CookieBanner() {
       <div className="mt-4 grid grid-cols-2 gap-2">
         <button
           type="button"
+          data-consent-decline
           onClick={() => choose("denied")}
           className="h-11 rounded-md border border-charcoal/20 text-sm font-medium transition-colors hover:border-charcoal/50"
         >
