@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CalendarClock, Check, ListChecks } from "lucide-react";
 import { PixelArt } from "@/components/pixels/PixelArt";
 import { CtaArrow, SectionHeading, buttonClass } from "@/components/ui";
@@ -52,7 +53,18 @@ export function ReportSection() {
               <CalendarClock className="h-4 w-4" /> Book a call
             </a>
           </div>
-          <p data-reveal className="mt-6 max-w-lg text-xs leading-relaxed text-slate">
+          <p data-reveal className="mt-6 text-sm text-slate">
+            Or get a focused version:{" "}
+            <Link href="/handover" className="text-charcoal underline underline-offset-4">
+              handover pack
+            </Link>{" "}
+            for off-plan buyers ·{" "}
+            <Link href="/snapshot" className="text-charcoal underline underline-offset-4">
+              rent snapshot
+            </Link>{" "}
+            for owners
+          </p>
+          <p data-reveal className="mt-4 max-w-lg text-xs leading-relaxed text-slate">
             {reportSmallPrint}
           </p>
         </div>

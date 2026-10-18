@@ -9,6 +9,8 @@ const explore = [
   { href: "/#how", label: "How it works" },
   { href: "/#report", label: "Free report" },
   { href: "/#calculator", label: "Income estimate" },
+  { href: "/handover", label: "Free handover pack" },
+  { href: "/snapshot", label: "Free rent snapshot" },
   { href: "/blog", label: "Blog" },
   { href: "/#faq", label: "FAQ" },
 ];

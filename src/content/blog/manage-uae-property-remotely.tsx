@@ -121,6 +121,10 @@ function Body() {
         Keep your Oqood (the interim registration for off-plan units) and payment receipts handy — you&apos;ll need
         them at handover. Make sure your service charge account with the owners&apos; association is in your name.
       </Callout>
+      <p>
+        Want this for your own project? Get our free <Link href="/handover">Dubai handover pack</Link>: the 12 checks
+        to make before you sign, your timeline and a first-week plan.
+      </p>
 
       <h2 id="earning">3. Decide how the property will earn</h2>
       <p>
@@ -223,6 +227,11 @@ function Body() {
         it&apos;s a holiday home. For value, the Dubai Land Department publishes transaction data you can use to
         compare similar units in your building or community. If the numbers have moved, revisit the strategy —
         switching between long-term and holiday-home letting, refinancing or selling.
+      </p>
+      <p>
+        Not sure where your unit stands today? Get a free{" "}
+        <Link href="/snapshot">rent and running-cost snapshot</Link> with the rent range for similar units, your yearly
+        costs and your net yield.
       </p>
 
       <h2 id="easiest-way">The easiest way: one team, one dashboard</h2>

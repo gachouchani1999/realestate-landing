@@ -1,12 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Cookie } from "lucide-react";
+import { LANDING_OFFERS } from "@/lib/leads";
+import { cn } from "@/lib/utils";
 import { onOpenCookieSettings, openCookieSettings, setConsent, useConsent } from "@/lib/consent";
+
+const landingPaths: string[] = Object.values(LANDING_OFFERS).map((o) => o.path);
 
 /** Analytics consent banner. Accept and decline carry equal weight; the footer link reopens it. */
 export function CookieBanner() {
   const consent = useConsent();
+  const pathname = usePathname();
+  // Landing pages have no sticky call-to-action bar to sit above.
+  const onLanding = landingPaths.includes(pathname);
   const [reopened, setReopened] = useState(false);
 
   useEffect(() => onOpenCookieSettings(() => setReopened(true)), []);
@@ -29,33 +37,41 @@ export function CookieBanner() {
   }
 
   return (
+    // Compact on phones (a slim bar that doesn't cover the page), a card on larger screens.
     <div
       role="dialog"
       aria-label="Cookie preferences"
-      className="fixed inset-x-3 bottom-24 z-[55] animate-step-in rounded-[20px] bg-white p-5 text-charcoal shadow-[0_24px_70px_-20px_rgb(27_40_33/0.45)] ring-1 ring-charcoal/10 sm:inset-x-auto sm:bottom-5 sm:left-5 sm:max-w-sm"
+      className={cn(
+        "fixed inset-x-2 z-[55] flex animate-step-in items-center gap-3 rounded-2xl bg-white p-3 text-charcoal shadow-[0_24px_70px_-20px_rgb(27_40_33/0.45)] ring-1 ring-charcoal/10",
+        "sm:inset-x-auto sm:bottom-5 sm:left-5 sm:block sm:max-w-sm sm:rounded-[20px] sm:p-5",
+        onLanding ? "bottom-2" : "bottom-24",
+      )}
     >
-      <div className="flex items-start gap-3">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-mist">
+      <div className="flex min-w-0 flex-1 items-start gap-3">
+        <span className="hidden h-9 w-9 shrink-0 place-items-center rounded-lg bg-mist sm:grid">
           <Cookie className="h-4.5 w-4.5" strokeWidth={1.75} />
         </span>
-        <p className="text-sm leading-relaxed text-charcoal/80">
-          We&apos;d like to use cookies from Google and Meta to see how people find Baytouna and to measure and
-          personalise our ads. We never sell your data.
+        <p className="text-xs leading-snug text-charcoal/80 sm:text-sm sm:leading-relaxed">
+          <span className="sm:hidden">Google &amp; Meta cookies help measure our ads. We never sell data.</span>
+          <span className="hidden sm:inline">
+            We&apos;d like to use cookies from Google and Meta to see how people find Baytouna and to measure and
+            personalise our ads. We never sell your data.
+          </span>
         </p>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-2">
+      <div className="flex shrink-0 gap-1.5 sm:mt-4 sm:grid sm:grid-cols-2 sm:gap-2">
         <button
           type="button"
           data-consent-decline
           onClick={() => choose("denied")}
-          className="h-11 rounded-md border border-charcoal/20 text-sm font-medium transition-colors hover:border-charcoal/50"
+          className="h-9 rounded-md border border-charcoal/20 px-3 text-[13px] font-medium transition-colors hover:border-charcoal/50 sm:h-11 sm:text-sm"
         >
           Decline
         </button>
         <button
           type="button"
           onClick={() => choose("granted")}
-          className="h-11 rounded-md bg-charcoal text-sm font-medium text-white transition-colors hover:bg-charcoal-700"
+          className="h-9 rounded-md bg-charcoal px-3 text-[13px] font-medium text-white transition-colors hover:bg-charcoal-700 sm:h-11 sm:text-sm"
         >
           Accept
         </button>

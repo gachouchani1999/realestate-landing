@@ -40,6 +40,20 @@ page opens the same form directly and asks for the email inside it. The question
 emirate and community (with suggestions); country and WhatsApp dialling code are pre-filled from the browser's time
 zone — nothing is looked up externally.
 
+## Ad landing pages
+
+Two focused pages for paid traffic, each with one offer, no site menu, and the form's first step in the first screen:
+
+| Page | Offer | For |
+|---|---|---|
+| `/handover` | Handover Pack: 12 checks, timeline, defects dates, first-week plan | Off-plan buyers getting keys |
+| `/snapshot` | Rent & running-cost snapshot: rent range, yearly costs, net yield, key dates | Owners, especially abroad |
+
+- **Form:** building first, then email (the partial save fires here), then the shared lead flow in its short version: one question, first name, optional WhatsApp, confirm. Offers live in `LANDING_OFFERS` in `src/lib/leads.ts`.
+- **In the sheet:** the Summary starts with the offer ("Handover Pack · …", "Rent snapshot · …") and Landing page shows which URL they came from.
+- **Ads:** point each ad at its own page and tag it, e.g. `https://www.baytouna.ae/handover?utm_source=meta&utm_campaign=handover-uk&utm_content=ad1`.
+- The WhatsApp number is optional everywhere.
+
 ## Unfinished attempts (drop-offs)
 
 Once the flow has a valid email, it also saves the visitor's progress in the background so an advisor can follow up

@@ -151,6 +151,53 @@ export const OFFERS: Record<Intent, { title: string; short: string; cta: string;
   },
 };
 
+/**
+ * Focused free offers for the paid-traffic landing pages. Each presets the intent, asks a single follow-up
+ * question, and names the deliverable, so the flow after the email is only a few taps.
+ */
+export const LANDING_OFFERS = {
+  "handover-pack": {
+    path: "/handover",
+    label: "Handover Pack",
+    intent: "handover",
+    details: ["handover"],
+    short: "Handover Pack",
+    cta: "Send my Handover Pack",
+    next: [
+      "We look up your project, developer and handover stage",
+      "Your Handover Pack arrives within 48 hours: your checklist, timeline, defects-window dates and first-week plan",
+      "Optional: a short call to walk through it, or to arrange snagging and key collection if you can't fly in",
+    ],
+  },
+  "rent-snapshot": {
+    path: "/snapshot",
+    label: "Rent snapshot",
+    intent: "owner",
+    details: ["currentUse"],
+    short: "rent & running-cost snapshot",
+    cta: "Send my free snapshot",
+    next: [
+      "We pull the rent and service-charge data for your building",
+      "Your snapshot arrives within 48 hours: rent range, yearly costs, net yield and key dates",
+      "Optional: a short call to walk through it and what you could change",
+    ],
+  },
+} as const satisfies Record<
+  string,
+  { path: string; label: string; intent: Intent; details: readonly DetailField[]; short: string; cta: string; next: readonly string[] }
+>;
+
+export type OfferKey = keyof typeof LANDING_OFFERS;
+export const OFFER_KEYS = Object.keys(LANDING_OFFERS) as OfferKey[];
+
+/** The follow-up questions a lead must answer: both for the intent, or just the landing offer's one. */
+export function detailQuestionsFor(intent: Intent, offer?: OfferKey | null) {
+  const all = DETAIL_QUESTIONS[intent];
+  if (!offer || LANDING_OFFERS[offer].intent !== intent) return all;
+  const wanted: readonly DetailField[] = LANDING_OFFERS[offer].details;
+  return all.filter((q) => wanted.includes(q.field));
+}
+
 export type Contact = { name: string; email: string; phone: string; country: string };
 
 export type LeadSource = {
@@ -174,6 +221,8 @@ export type Lead = Contact & {
   community?: string;
   /** What they want the dashboard to track. */
   interests: Interest[];
+  /** The landing-page offer they asked for, if they came through one. */
+  offer?: OfferKey;
   /** Human-readable one-liner for inboxes, spreadsheets and CRMs. */
   summary: string;
   source: LeadSource;
@@ -184,14 +233,19 @@ export type LeadErrors = Partial<Record<keyof Contact | DetailField | "intent" |
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[\d\s().-]{7,20}$/;
 
+/** A WhatsApp number is optional; a lone dialling code (pre-filled from the time zone) counts as none. */
+export function phoneOrEmpty(value: string) {
+  return value.replace(/\D/g, "").length > 4 ? value.trim() : "";
+}
+
 /** One validator per contact field, so the step-by-step flow can check a single answer. */
 export const contactFieldError: Record<keyof Contact, (value: string) => string | undefined> = {
-  name: (v) => (v.trim().length < 2 ? "Please enter your full name." : undefined),
+  name: (v) => (v.trim().length < 2 ? "Please enter your name." : undefined),
   email: (v) => (EMAIL_RE.test(v.trim()) ? undefined : "Please enter a valid email address."),
   phone: (v) =>
-    PHONE_RE.test(v.trim()) && v.replace(/\D/g, "").length >= 7
+    !phoneOrEmpty(v) || (PHONE_RE.test(v.trim()) && v.replace(/\D/g, "").length >= 7)
       ? undefined
-      : "Please include your country code, e.g. +44 7700 900123.",
+      : "Please include your country code, e.g. +44 7700 900123 — or leave it blank.",
   country: (v) => (v.trim().length < 2 ? "Please tell us where you're based." : undefined),
 };
 
@@ -208,8 +262,9 @@ export function labelFor(options: readonly Option[], value: string | null | unde
   return options.find((o) => o.value === value)?.label ?? "";
 }
 
-export function summarise(intent: Intent, details: Details, emirate?: Emirate, community?: string) {
+export function summarise(intent: Intent, details: Details, emirate?: Emirate, community?: string, offer?: OfferKey) {
   const parts = [
+    offer ? LANDING_OFFERS[offer].label : undefined,
     labelFor(INTENTS, intent),
     ...DETAIL_QUESTIONS[intent].map((q) => labelFor(q.options, details[q.field])),
     community,
@@ -236,6 +291,10 @@ function uuid(value: unknown) {
   return typeof value === "string" && UUID_RE.test(value) ? value.toLowerCase() : undefined;
 }
 
+function parseOffer(value: unknown): OfferKey | undefined {
+  return OFFER_KEYS.find((key) => key === value);
+}
+
 function parseInterests(value: unknown): Interest[] {
   if (!Array.isArray(value)) return [];
   return INTERESTS.map((o) => o.value).filter((v) => value.includes(v));
@@ -259,18 +318,19 @@ export function parseLead(body: unknown): { lead: Lead } | { errors: LeadErrors 
   const contact: Contact = {
     name: str(b.name, 120),
     email: str(b.email, 200).toLowerCase(),
-    phone: str(b.phone, 40),
+    phone: phoneOrEmpty(str(b.phone, 40)),
     country: str(b.country, 80),
   };
   const errors = validateContact(contact);
 
   const intent = oneOf(b.intent, INTENTS);
+  const offer = parseOffer(b.offer);
   const details: Details = {};
   if (!intent) {
     errors.intent = "Please tell us what you'd like help with.";
   } else {
     const raw = record(b.details);
-    for (const q of DETAIL_QUESTIONS[intent]) {
+    for (const q of detailQuestionsFor(intent, offer)) {
       const value = oneOf(raw[q.field], q.options);
       if (value) details[q.field] = value;
       else errors[q.field] = "Please choose an option.";
@@ -294,7 +354,8 @@ export function parseLead(body: unknown): { lead: Lead } | { errors: LeadErrors 
       emirate,
       community,
       interests: parseInterests(b.interests),
-      summary: summarise(intent, details, emirate, community),
+      offer,
+      summary: summarise(intent, details, emirate, community, offer),
       source,
     },
   };
@@ -312,6 +373,7 @@ export type PartialLead = Partial<Contact> & {
   emirate?: Emirate;
   community?: string;
   interests?: Interest[];
+  offer?: OfferKey;
   /** The question the visitor was on when this was saved. */
   lastStep?: string;
   summary?: string;
@@ -335,21 +397,23 @@ export function parsePartialLead(body: unknown): { lead: PartialLead } | { error
   }
   const emirate = oneOf(b.emirate, EMIRATES) ?? undefined;
   const community = intent && ASKS_COMMUNITY[intent] ? str(b.community, 120) || undefined : undefined;
+  const offer = parseOffer(b.offer);
 
   return {
     lead: {
       id,
       email,
       name: str(b.name, 120) || undefined,
-      phone: str(b.phone, 40) || undefined,
+      phone: phoneOrEmpty(str(b.phone, 40)) || undefined,
       country: str(b.country, 80) || undefined,
       intent,
       details: intent ? details : undefined,
       emirate,
       community,
       interests: parseInterests(b.interests),
+      offer,
       lastStep: str(b.lastStep, 40) || undefined,
-      summary: intent ? summarise(intent, details, emirate, community) : undefined,
+      summary: intent ? summarise(intent, details, emirate, community, offer) : undefined,
       source: parseSource(b.source),
     },
   };

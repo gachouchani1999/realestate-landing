@@ -13,9 +13,12 @@ import {
   EMIRATES,
   INTENTS,
   INTERESTS,
+  LANDING_OFFERS,
   OFFERS,
   contactFieldError,
+  detailQuestionsFor,
   labelFor,
+  phoneOrEmpty,
   type Contact,
   type DetailField,
   type Details,
@@ -24,6 +27,7 @@ import {
   type Interest,
   type LeadErrors,
   type LeadSource,
+  type OfferKey,
 } from "@/lib/leads";
 import { COMMUNITIES, COUNTRIES, guessCountry } from "@/lib/locations";
 import { cornerScatter } from "@/lib/pixels";
@@ -36,7 +40,7 @@ type Question =
   | { id: ChoiceId; kind: "choice"; title: string; help?: string; options: readonly Option[] }
   | { id: "community"; kind: "community"; title: string; help?: string }
   | { id: "interests"; kind: "multi"; title: string; help?: string; options: readonly Option[] }
-  | { id: keyof Contact; kind: "text"; title: string; help?: string }
+  | { id: keyof Contact; kind: "text"; title: string; help?: string; placeholder?: string }
   | { id: "review"; kind: "review"; title: string; help?: string };
 
 type Answers = Contact & {
@@ -46,6 +50,13 @@ type Answers = Contact & {
   community: string;
   interests: Interest[];
 };
+
+/** Answers a landing page has already collected inline, plus the free offer it promises. */
+export type FlowPreset = { offer: OfferKey; emirate: Emirate; community: string };
+
+function offerFor(intent: Intent | null, preset: FlowPreset | null) {
+  return preset ? LANDING_OFFERS[preset.offer] : OFFERS[intent ?? "owner"];
+}
 
 const EMPTY: Answers = {
   intent: null,
@@ -96,7 +107,13 @@ function firstName(name: string) {
   return name.trim().split(/\s+/)[0] ?? "";
 }
 
-function buildQuestions(a: Answers, emailLocked: boolean, countryGuessed: boolean): Question[] {
+function buildQuestions(
+  a: Answers,
+  emailLocked: boolean,
+  countryGuessed: boolean,
+  preset: FlowPreset | null,
+): Question[] {
+  if (preset) return buildShortQuestions(a, emailLocked, countryGuessed, preset);
   const offer = OFFERS[a.intent ?? "owner"];
   const first = firstName(a.name);
   const list: Question[] = [
@@ -152,7 +169,7 @@ function buildQuestions(a: Answers, emailLocked: boolean, countryGuessed: boolea
     id: "phone",
     kind: "text",
     title: first ? `And your WhatsApp number, ${first}?` : "And your WhatsApp number?",
-    help: "Include your country code. Your advisor may message you with a quick question.",
+    help: "Optional. Include your country code — your advisor may message you with a quick question.",
   });
   list.push({
     id: "country",
@@ -165,6 +182,42 @@ function buildQuestions(a: Answers, emailLocked: boolean, countryGuessed: boolea
     kind: "review",
     title: first ? `Ready for your ${offer.short}, ${first}?` : `Ready for your ${offer.short}?`,
     help: "Check your answers — tap Edit to change anything.",
+  });
+  return list;
+}
+
+/**
+ * Landing pages already have the building and email, so the flow is one follow-up question, a first name,
+ * an optional WhatsApp number and a confirm screen. The country is only asked when it can't be guessed.
+ */
+function buildShortQuestions(a: Answers, emailLocked: boolean, countryGuessed: boolean, preset: FlowPreset): Question[] {
+  const offer = LANDING_OFFERS[preset.offer];
+  const first = firstName(a.name);
+  const list: Question[] = detailQuestionsFor(offer.intent, preset.offer).map((q) => ({
+    id: q.field,
+    kind: "choice" as const,
+    title: q.question,
+    help: "So we can tailor it to you.",
+    options: q.options,
+  }));
+  list.push({ id: "name", kind: "text", title: "What's your first name?", placeholder: "First name" });
+  if (!emailLocked) {
+    list.push({ id: "email", kind: "text", title: "Where should we send it?", help: `We'll email your ${offer.short} here.` });
+  }
+  list.push({
+    id: "phone",
+    kind: "text",
+    title: first ? `Want it on WhatsApp too, ${first}?` : "Want it on WhatsApp too?",
+    help: "Optional — include your country code, or skip and we'll just use email.",
+  });
+  if (!countryGuessed) {
+    list.push({ id: "country", kind: "text", title: "Where are you based?", help: "The country you live in now." });
+  }
+  list.push({
+    id: "review",
+    kind: "review",
+    title: first ? `Ready for your ${offer.short}, ${first}?` : `Ready for your ${offer.short}?`,
+    help: "Check your details — tap Edit to change anything.",
   });
   return list;
 }
@@ -185,11 +238,13 @@ function readSource(): LeadSource {
 export function LeadFlow({
   open,
   prefilledEmail,
+  preset,
   onClose,
   onSubmitted,
 }: {
   open: boolean;
   prefilledEmail: string | null;
+  preset: FlowPreset | null;
   onClose: () => void;
   onSubmitted: (email: string) => void;
 }) {
@@ -209,12 +264,12 @@ export function LeadFlow({
   const advancing = useRef(false);
 
   const questions = useMemo(
-    () => buildQuestions(answers, emailLocked, countryGuessed),
-    [answers, emailLocked, countryGuessed],
+    () => buildQuestions(answers, emailLocked, countryGuessed, preset),
+    [answers, emailLocked, countryGuessed, preset],
   );
   const step = Math.min(index, questions.length - 1);
   const current = questions[step];
-  const offer = OFFERS[answers.intent ?? "owner"];
+  const offer = offerFor(answers.intent, preset);
   const progress = done ? 100 : (step / (questions.length - 1)) * 100;
 
   // Open / close: pixel-grid reveal, then the panel.
@@ -263,13 +318,13 @@ export function LeadFlow({
   // Saves are debounced, sent immediately when the visitor closes the form or leaves the page, and skipped when
   // nothing changed. Every save and the final submission share one id so a CRM can update a single record.
   const attempt = useRef<string | null>(null);
-  const latest = useRef({ answers, lastStep: current.id as string, done });
+  const latest = useRef({ answers, lastStep: current.id as string, done, offer: preset?.offer });
   const lastSaved = useRef("");
   const countryConfirmed = useRef(false);
   const saveTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    latest.current = { answers, lastStep: current.id, done };
+    latest.current = { answers, lastStep: current.id, done, offer: preset?.offer };
   });
 
   function attemptId() {
@@ -288,10 +343,11 @@ export function LeadFlow({
       emirate: a.emirate,
       community: a.community,
       interests: a.interests,
+      offer: latest.current.offer,
       name: a.name,
       email: a.email,
       // Leave out the pre-filled dialling code and guessed country until the visitor has confirmed them.
-      phone: contactFieldError.phone(a.phone) ? undefined : a.phone,
+      phone: contactFieldError.phone(a.phone) ? undefined : phoneOrEmpty(a.phone) || undefined,
       country: countryConfirmed.current ? a.country : undefined,
       lastStep,
       source: readSource(),
@@ -343,6 +399,18 @@ export function LeadFlow({
       setAnswers((a) => ({ ...EMPTY, name: a.name, email: a.email, phone: a.phone, country: a.country }));
       setIndex(0);
     }
+    if (preset) {
+      // A landing page collected the building inline: start at its first follow-up question.
+      const intent = LANDING_OFFERS[preset.offer].intent;
+      setAnswers((a) => ({
+        ...a,
+        intent,
+        emirate: preset.emirate,
+        community: preset.community,
+        details: a.intent === intent ? a.details : {},
+      }));
+      setIndex(0);
+    }
     if (prefilledEmail && !contactFieldError.email(prefilledEmail)) {
       setAnswers((a) => ({ ...a, email: prefilledEmail }));
       setEmailLocked(true);
@@ -356,7 +424,7 @@ export function LeadFlow({
     /* eslint-enable react-hooks/set-state-in-effect */
     // `done` and `answers` are deliberately read only when the flow opens.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, prefilledEmail]);
+  }, [open, prefilledEmail, preset]);
 
   // Animate each new question in, then focus it.
   useGSAP(
@@ -479,9 +547,10 @@ export function LeadFlow({
           emirate: answers.emirate,
           community: answers.community,
           interests: answers.interests,
+          offer: preset?.offer,
           name: answers.name,
           email: answers.email,
-          phone: answers.phone,
+          phone: phoneOrEmpty(answers.phone),
           country: answers.country,
           website: honeypot.current?.value ?? "",
           source: readSource(),
@@ -498,8 +567,8 @@ export function LeadFlow({
         }
         throw new Error(data.error ?? "Something went wrong. Please try again.");
       }
-      track("generate_lead", { intent: answers.intent, emirate: answers.emirate, ...answers.details });
-      trackMeta("Lead", { content_category: answers.intent });
+      track("generate_lead", { intent: answers.intent, emirate: answers.emirate, offer: preset?.offer, ...answers.details });
+      trackMeta("Lead", { content_category: preset?.offer ?? answers.intent });
       window.clearTimeout(saveTimer.current);
       setDirection(1);
       setDone(true);
@@ -649,6 +718,7 @@ export function LeadFlow({
                         onChange={(e) => setText(current.id as keyof Contact, e.target.value)}
                         list={current.id === "country" ? "flow-countries" : undefined}
                         {...TEXT_INPUTS[current.id]}
+                        {...(current.placeholder ? { placeholder: current.placeholder } : {})}
                         className="w-full border-b-2 border-charcoal/25 bg-transparent pb-3 text-2xl transition-colors outline-none placeholder:text-charcoal/25 focus:border-charcoal sm:text-[2rem]"
                       />
                       {current.id === "country" && (
@@ -677,7 +747,12 @@ export function LeadFlow({
                   )}
 
                   {current.kind === "review" && (
-                    <Review answers={answers} onEdit={editAt} />
+                    <Review
+                      answers={answers}
+                      preset={preset}
+                      editable={questions.map((q) => q.id)}
+                      onEdit={editAt}
+                    />
                   )}
                 </div>
 
@@ -724,11 +799,12 @@ export function LeadFlow({
                     >
                       OK <Check className="h-4 w-4" />
                     </button>
-                    {current.kind === "community" && (
+                    {(current.kind === "community" || current.id === "phone") && (
                       <button
                         type="button"
                         onClick={() => {
-                          setText("community", "");
+                          if (current.kind === "community") setText("community", "");
+                          else setText("phone", "");
                           go(step + 1, 1);
                         }}
                         className="h-12 px-2 text-[15px] text-charcoal/60 underline-offset-4 hover:text-charcoal hover:underline"
@@ -944,11 +1020,24 @@ function Community({
   );
 }
 
-function Review({ answers, onEdit }: { answers: Answers; onEdit: (id: Question["id"]) => void }) {
+function Review({
+  answers,
+  preset,
+  editable,
+  onEdit,
+}: {
+  answers: Answers;
+  preset: FlowPreset | null;
+  /** Questions in this flow; answers collected elsewhere (on a landing page) show without an Edit link. */
+  editable: Question["id"][];
+  onEdit: (id: Question["id"]) => void;
+}) {
   if (!answers.intent) return null;
-  const rows: { id: Question["id"]; label: string; value: string }[] = [
-    { id: "intent", label: "Looking to", value: labelFor(INTENTS, answers.intent) },
-    ...DETAIL_QUESTIONS[answers.intent].map((q) => ({
+  const allRows: { id: Question["id"]; label: string; value: string }[] = [
+    preset
+      ? { id: "intent", label: "Getting", value: LANDING_OFFERS[preset.offer].label }
+      : { id: "intent", label: "Looking to", value: labelFor(INTENTS, answers.intent) },
+    ...detailQuestionsFor(answers.intent, preset?.offer).map((q) => ({
       id: q.field,
       label: DETAIL_LABELS[q.field],
       value: labelFor(q.options, answers.details[q.field]),
@@ -965,22 +1054,28 @@ function Review({ answers, onEdit }: { answers: Answers; onEdit: (id: Question["
     },
     { id: "name", label: "Name", value: answers.name },
     { id: "email", label: "Email", value: answers.email },
-    { id: "phone", label: "WhatsApp", value: answers.phone },
+    { id: "phone", label: "WhatsApp", value: phoneOrEmpty(answers.phone) || "—" },
     { id: "country", label: "Based in", value: answers.country },
   ];
+  // "Help with" is only asked in the full flow.
+  const rows = allRows.filter((row) => row.id !== "interests" || answers.interests.length > 0);
   return (
     <dl className="max-w-xl divide-y divide-charcoal/10 border-y border-charcoal/10">
       {rows.map((row) => (
         <div key={row.id} className="flex items-center gap-4 py-3">
           <dt className="w-24 shrink-0 text-sm text-slate">{row.label}</dt>
           <dd className="min-w-0 flex-1 truncate font-medium">{row.value}</dd>
-          <button
-            type="button"
-            onClick={() => onEdit(row.id)}
-            className="text-sm text-olive-800 underline-offset-4 hover:underline"
-          >
-            Edit<span className="sr-only"> {row.label}</span>
-          </button>
+          {editable.includes(row.id) || (row.id === "email" && editable.includes("name")) ? (
+            <button
+              type="button"
+              onClick={() => onEdit(row.id)}
+              className="text-sm text-olive-800 underline-offset-4 hover:underline"
+            >
+              Edit<span className="sr-only"> {row.label}</span>
+            </button>
+          ) : (
+            <span aria-hidden className="w-7" />
+          )}
         </div>
       ))}
     </dl>
@@ -997,7 +1092,7 @@ function Done({
   name: string;
   email: string;
   offerShort: string;
-  next: string[];
+  next: readonly string[];
   onClose: () => void;
 }) {
   return (

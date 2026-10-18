@@ -2,14 +2,18 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import dynamic from "next/dynamic";
+import type { FlowPreset } from "@/components/lead-flow/LeadFlow";
 import { track } from "@/lib/utils";
 
 // The full-screen form is a big chunk of code nobody needs for the first paint, so it loads once the page is idle.
 const LeadFlow = dynamic(() => import("@/components/lead-flow/LeadFlow").then((m) => m.LeadFlow), { ssr: false });
 
 type LeadFlowContextValue = {
-  /** Opens the full-screen form, optionally with the email already captured. */
-  openFlow: (email?: string) => void;
+  /**
+   * Opens the full-screen form, optionally with the email already captured. A landing page also passes what it
+   * collected inline (building, emirate) and its offer, which switches the flow to its short version.
+   */
+  openFlow: (email?: string, preset?: FlowPreset) => void;
   /** Set once a lead has been submitted in this visit. */
   submittedEmail: string | null;
 };
@@ -26,13 +30,15 @@ export function LeadFlowProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [prefilledEmail, setPrefilledEmail] = useState<string | null>(null);
+  const [preset, setPreset] = useState<FlowPreset | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
-  const openFlow = useCallback((email?: string) => {
+  const openFlow = useCallback((email?: string, nextPreset?: FlowPreset) => {
     if (email) setPrefilledEmail(email);
+    setPreset(nextPreset ?? null);
     setLoaded(true);
     setOpen(true);
-    track("lead_flow_open", { from: email ? "hero_email" : "cta" });
+    track("lead_flow_open", { from: nextPreset ? `landing_${nextPreset.offer}` : email ? "hero_email" : "cta" });
   }, []);
 
   useEffect(() => {
@@ -68,6 +74,7 @@ export function LeadFlowProvider({ children }: { children: ReactNode }) {
         <LeadFlow
           open={open}
           prefilledEmail={prefilledEmail}
+          preset={preset}
           onClose={() => setOpen(false)}
           onSubmitted={(email) => setSubmittedEmail(email)}
         />
