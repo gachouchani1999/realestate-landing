@@ -6,7 +6,7 @@ import { LandingForm } from "@/components/landing/LandingForm";
 import { Logo, LogoMark } from "@/components/Logo";
 import { PixelArt } from "@/components/pixels/PixelArt";
 import { CtaArrow, SectionHeading, buttonClass } from "@/components/ui";
-import { site } from "@/config/site";
+import { site, whatsappLink } from "@/config/site";
 import { LANDING_OFFERS, type OfferKey } from "@/lib/leads";
 import { cornerScatter } from "@/lib/pixels";
 
@@ -48,7 +48,7 @@ export function LandingHeader() {
         </Link>
         <p className="flex items-center gap-2 text-[13px] font-medium text-charcoal/70">
           <span aria-hidden className="h-2 w-2 bg-olive-600" />
-          Free · Ready in {site.reportTurnaround}
+          Free<span className="hidden min-[360px]:inline"> · Ready in {site.reportTurnaround}</span>
         </p>
       </div>
     </header>
@@ -85,8 +85,8 @@ export function LandingHero({
         height={360}
         className="hero-corner pointer-events-none absolute top-0 right-0 -z-10 h-[150px] w-[216px] opacity-60 sm:h-[360px] sm:w-[520px] sm:opacity-100"
       />
-      <div className="wrap grid gap-8 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center lg:gap-16">
-        <div>
+      <div className="wrap grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center lg:gap-16">
+        <div className="min-w-0">
           <p className="hero-fade inline-flex rounded-md bg-white/70 px-2.5 py-1 text-xs font-medium tracking-[0.08em] uppercase">
             {eyebrow}
           </p>
@@ -109,7 +109,7 @@ export function LandingHero({
           {aside && <div className="mt-10 hidden lg:block">{aside}</div>}
         </div>
 
-        <div className="hero-fade" style={{ "--d": "0.2s" } as CSSProperties}>
+        <div className="hero-fade min-w-0" style={{ "--d": "0.2s" } as CSSProperties}>
           <LandingForm offer={offer} {...form} />
           <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] text-charcoal/75 lg:hidden">
             {assurances.map((a) => (
@@ -149,7 +149,7 @@ export function WhatYouGet({
 }) {
   return (
     <section className="bg-white py-20 sm:py-28">
-      <div className="wrap grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-20">
+      <div className="wrap grid grid-cols-1 gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-20">
         <div>
           <SectionHeading eyebrow={eyebrow} title={title} sub={sub} />
           <ol className="mt-10 space-y-6">
@@ -189,7 +189,7 @@ export function AboutUs() {
         height={280}
         className="pointer-events-none absolute right-0 bottom-0 -z-10 h-[180px] w-[270px] sm:h-[280px] sm:w-[420px]"
       />
-      <div className="wrap grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
+      <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <SectionHeading
           tone="dark"
           eyebrow="Who's behind this"
@@ -244,7 +244,7 @@ export function HowItWorks({ steps }: { steps: { title: string; body: string }[]
 export function LandingFaq({ faqs }: { faqs: { q: string; a: string }[] }) {
   return (
     <section className="bg-white py-20 sm:py-28">
-      <div className="wrap grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
+      <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
         <SectionHeading eyebrow="Questions" title="Before you ask" />
         <div className="divide-y divide-charcoal/10 border-y border-charcoal/10">
           {faqs.map((f) => (
@@ -272,7 +272,7 @@ export function FinalForm({ offer, title, sub, form }: { offer: OfferKey; title:
         height={360}
         className="pointer-events-none absolute top-0 right-0 -z-10 h-[180px] w-[260px] opacity-70 sm:h-[360px] sm:w-[520px]"
       />
-      <div className="wrap grid gap-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center lg:gap-16">
+      <div className="wrap grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center lg:gap-16">
         <div>
           <h2 className="headline text-[clamp(2.3rem,4.6vw,4.4rem)] text-charcoal">{title}</h2>
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-charcoal/75">{sub}</p>
@@ -317,6 +317,16 @@ export function LandingFooter({ current }: { current: OfferKey }) {
               <Link href="/blog/manage-uae-property-remotely" className="hover:text-white">
                 Owner guide
               </Link>
+            </li>
+            <li>
+              <a
+                href={whatsappLink(`Hi Baytouna, I have a question about the free ${LANDING_OFFERS[current].short}.`)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white"
+              >
+                WhatsApp {site.phoneDisplay}
+              </a>
             </li>
             <li>
               <a href={`mailto:${site.email}`} className="hover:text-white">

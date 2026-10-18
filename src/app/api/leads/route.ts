@@ -1,5 +1,7 @@
+import { after } from "next/server";
 import { deliver, honeypotFilled, rateLimited, readJson } from "@/lib/lead-delivery";
 import { parseLead } from "@/lib/leads";
+import { sendMetaLead } from "@/lib/meta-capi";
 
 export async function POST(request: Request) {
   const body = await readJson(request);
@@ -34,6 +36,12 @@ export async function POST(request: Request) {
       { error: "We couldn't submit your request just now. Please try again, or message us on WhatsApp." },
       { status: 502 },
     );
+  }
+
+  // Report the conversion to Meta from the server once the response has gone out, so it counts without the browser
+  // pixel. Visitors who explicitly declined cookies are left out.
+  if ((body as Record<string, unknown>).consent !== "denied") {
+    after(() => sendMetaLead(lead, request));
   }
 
   return Response.json({ ok: true });

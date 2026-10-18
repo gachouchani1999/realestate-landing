@@ -108,7 +108,7 @@ export function LandingForm({
               id={`${id}-emirate`}
               value={emirate}
               onChange={(e) => setEmirate(e.target.value as Emirate)}
-              className="w-[6.5rem] shrink-0 cursor-pointer border-r border-charcoal/10 bg-transparent pl-3 text-[15px] outline-none"
+              className="w-[6.5rem] max-w-[38%] shrink-0 cursor-pointer border-r border-charcoal/10 bg-transparent pl-3 text-[15px] outline-none"
             >
               {EMIRATES.filter((e) => e.value !== "other").map((e) => (
                 <option key={e.value} value={e.value}>
@@ -129,7 +129,8 @@ export function LandingForm({
               placeholder={buildingPlaceholder}
               aria-invalid={Boolean(error)}
               aria-describedby={error ? `${id}-error` : undefined}
-              className="min-w-0 flex-1 bg-transparent px-3 text-base outline-none placeholder:text-charcoal/40"
+              size={1}
+              className="w-0 min-w-0 flex-1 bg-transparent px-3 text-base text-ellipsis outline-none placeholder:text-charcoal/40"
             />
             <datalist id={`${id}-communities`}>
               {COMMUNITIES[emirate].map((c) => (
@@ -181,11 +182,11 @@ export function LandingForm({
                 setError(null);
                 setStep(1);
               }}
-              className="inline-flex items-center gap-1.5 text-sm text-slate hover:text-charcoal"
+              className="inline-flex min-w-0 items-center gap-1.5 text-sm text-slate hover:text-charcoal"
             >
-              <ArrowLeft className="h-3.5 w-3.5" /> {community}
+              <ArrowLeft className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{community}</span>
             </button>
-            <span className="flex items-center gap-1.5 text-xs text-slate">
+            <span className="flex shrink-0 items-center gap-1.5 text-xs text-slate">
               <Lock className="h-3 w-3" /> No spam, ever
             </span>
           </div>

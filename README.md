@@ -101,19 +101,19 @@ what they want to track (`interests`), emirate, community, contact
 details, UTM parameters, and a one-line `summary` (e.g. "I'm getting my keys · 2 bedrooms · Within 3 months ·
 Dubai Marina") that is handy for email alerts, sheets and CRMs. A hidden honeypot field and a light per-IP rate limit filter basic spam.
 
-**Analytics & cookies.** Google Analytics 4 (`G-V387M4WQX6`, set in `src/config/site.ts`) loads only in production
-builds and only after the visitor clicks **Accept** on the cookie banner; declining (now or later via "Cookie
-settings" in the footer) keeps it off and clears `_ga` cookies. Code: `src/components/analytics/`, `src/lib/consent.ts`.
-In GA4, mark `generate_lead` and `book_call_click` as key events.
+**Analytics & cookies.** The Google tag (GA4 `G-V387M4WQX6` and Google Ads `AW-18511825797`, set in
+`src/config/site.ts`) loads in production builds in **consent mode**: until a visitor clicks **Accept** it sets no
+cookies and sends only cookieless pings, which Google uses to count and model visits and conversions. Accept switches it
+to full measurement; Decline (now or later via "Cookie settings" in the footer) keeps it cookieless and clears `_ga` /
+`_gcl` cookies. In GA4, mark `generate_lead` as a key event and import it into Google Ads as the conversion.
+Code: `src/components/analytics/`, `src/lib/consent.ts`.
 
-**Google Ads tag** (`AW-18511825797`, in `src/config/site.ts`) shares the same Google tag as GA4 and the same
-consent; Accept grants Google's ad consent signals, Decline revokes them and clears `_gcl` cookies. For conversions,
-either import GA4's `generate_lead` into Google Ads or add an Ads conversion label.
-
-**Meta Pixel** (`4093844800921406`, also in `src/config/site.ts`) follows the same consent: it loads only after
-**Accept**, sends `PageView`, `Lead` (after a successful form submission) and `Contact` (any WhatsApp link click),
-and is revoked with its `_fbp` cookie removed if the visitor declines. There is deliberately no `<noscript>` fallback,
-since it would track visitors before they could consent.
+**Meta.** The browser pixel (`4093844800921406`) loads only after **Accept** and sends `PageView`, `Lead` and `Contact`
+(WhatsApp clicks). Every submitted lead is also sent from the server via the **Conversions API**
+(`src/lib/meta-capi.ts`) with hashed email, phone and first name, the ad click id (`fbclid`), IP and browser, so leads
+count without cookie consent; both carry the lead id as the event id, so Meta counts each lead once. It needs
+`META_CAPI_ACCESS_TOKEN`, and skips visitors who explicitly declined cookies. The form's small print tells visitors
+that Google and Meta are told a request was made.
 
 Conversion events (`lead_flow_open`, `lead_flow_step`, `lead_form_start`, `generate_lead`, `calculator_used`, `calculator_strategy`, `book_call_click`, `whatsapp_click`) are pushed to `window.dataLayer` / `gtag` when Google Tag Manager or GA4 is installed.
 

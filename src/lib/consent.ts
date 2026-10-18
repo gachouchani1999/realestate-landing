@@ -1,7 +1,6 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { site } from "@/config/site";
 
 // Cookie consent (analytics + advertising), remembered per browser. Without a stored choice the banner shows and
 // none of Google Analytics, Google Ads or the Meta Pixel loads.
@@ -28,6 +27,11 @@ function subscribe(listener: () => void) {
   };
 }
 
+/** The visitor's stored choice, read outside React (e.g. to send with a form). */
+export function currentConsent(): Consent {
+  return read();
+}
+
 /** Current choice; `"server"` during server rendering, before the browser's choice is known. */
 export function useConsent(): Consent | "server" {
   return useSyncExternalStore(subscribe, read, () => "server");
@@ -39,11 +43,8 @@ export function setConsent(value: Exclude<Consent, "unset">) {
   } catch {
     // Storage blocked (private mode etc.): the choice holds for this page view only.
   }
-  // gtag's opt-out flag: without it, already-loaded tags still flush queued events (scroll, engagement) on page exit.
-  const tagIds = [site.gaMeasurementId, site.googleAdsId].filter(Boolean);
-  for (const id of tagIds) (window as unknown as Record<string, boolean>)[`ga-disable-${id}`] = value === "denied";
-
-  // Changing back within the same page view: resume the tags that are already loaded.
+  // Google runs in consent mode: its tag is always loaded, and this switches it between cookieless pings (denied)
+  // and full measurement (granted). The Meta Pixel only ever loads after Accept.
   if (value === "granted") {
     window.gtag?.("consent", "update", {
       analytics_storage: "granted",

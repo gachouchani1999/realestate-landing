@@ -31,6 +31,7 @@ import {
 } from "@/lib/leads";
 import { COMMUNITIES, COUNTRIES, guessCountry } from "@/lib/locations";
 import { cornerScatter } from "@/lib/pixels";
+import { currentConsent } from "@/lib/consent";
 import { cn, track, trackMeta } from "@/lib/utils";
 
 type Option = { value: string; label: string; hint?: string };
@@ -553,6 +554,7 @@ export function LeadFlow({
           phone: phoneOrEmpty(answers.phone),
           country: answers.country,
           website: honeypot.current?.value ?? "",
+          consent: currentConsent(),
           source: readSource(),
         }),
       });
@@ -568,7 +570,7 @@ export function LeadFlow({
         throw new Error(data.error ?? "Something went wrong. Please try again.");
       }
       track("generate_lead", { intent: answers.intent, emirate: answers.emirate, offer: preset?.offer, ...answers.details });
-      trackMeta("Lead", { content_category: preset?.offer ?? answers.intent });
+      trackMeta("Lead", { content_category: preset?.offer ?? answers.intent }, { eventID: attemptId() });
       window.clearTimeout(saveTimer.current);
       setDirection(1);
       setDone(true);
@@ -672,6 +674,7 @@ export function LeadFlow({
               <Done
                 name={firstName(answers.name)}
                 email={answers.email}
+                community={answers.community.trim()}
                 offerShort={offer.short}
                 next={offer.next}
                 onClose={close}
@@ -787,7 +790,8 @@ export function LeadFlow({
                       )}
                     </button>
                     <p className="mt-3 max-w-md text-xs text-slate">
-                      We only use your details to prepare your {offer.short} and contact you about it.
+                      We only use your details to prepare your {offer.short} and contact you about it. To measure our
+                      ads, we let Google and Meta know a request was made. We never sell your data.
                     </p>
                   </div>
                 ) : current.kind !== "choice" ? (
@@ -1085,16 +1089,24 @@ function Review({
 function Done({
   name,
   email,
+  community,
   offerShort,
   next,
   onClose,
 }: {
   name: string;
   email: string;
+  community: string;
   offerShort: string;
   next: readonly string[];
   onClose: () => void;
 }) {
+  // Pre-written so the advisor knows who's messaging and what they asked for.
+  const whatsappMessage = [
+    `Hi Baytouna, ${name ? `I'm ${name}. ` : ""}I just requested my free ${offerShort}`,
+    community ? ` for ${community}` : "",
+    ". ",
+  ].join("");
   return (
     <>
       <span className="grid h-14 w-14 place-items-center rounded-full bg-white text-emerald-600">
@@ -1109,8 +1121,8 @@ function Done({
       </h2>
       <p className="mt-3 max-w-lg text-lg text-charcoal/65">
         Your {offerShort} is being prepared and will reach <strong className="text-charcoal">{email}</strong> within{" "}
-        {site.reportTurnaround}. Book a short call to walk through it — founding owners get their dashboard set up on
-        the same call.
+        {site.reportTurnaround}. Questions before then, or want to talk it through? Message us on WhatsApp — a person
+        replies, usually the same day.
       </p>
       <ol className="mt-8 max-w-lg space-y-3 rounded-2xl bg-white/60 p-5 text-sm">
         {next.map((item, i) => (
@@ -1125,23 +1137,23 @@ function Done({
       <div className="mt-8 flex flex-wrap gap-3">
         <a
           data-autofocus
-          href={bookingLink(`Hi Baytouna, I just requested my free ${offerShort} and would like to book a call.`)}
+          href={whatsappLink(whatsappMessage)}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => track("book_call_click", { location: "flow_success" })}
+          onClick={() => track("whatsapp_click", { location: "flow_success" })}
           className="group inline-flex h-12 items-center gap-2.5 rounded-md bg-charcoal px-5 text-sm font-medium text-white transition hover:bg-charcoal-700"
         >
-          <CalendarClock className="h-4 w-4 text-olive-300" /> Book your call
+          <MessageCircle className="h-4 w-4 text-olive-300" /> Chat on WhatsApp
         </a>
         {site.bookingUrl && (
           <a
-            href={whatsappLink(`Hi Baytouna, I just requested my free ${offerShort}.`)}
+            href={bookingLink()}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => track("whatsapp_click", { location: "flow_success" })}
+            onClick={() => track("book_call_click", { location: "flow_success" })}
             className="inline-flex h-12 items-center gap-2 rounded-md border border-charcoal/20 px-5 text-sm font-medium transition hover:border-charcoal/50"
           >
-            <MessageCircle className="h-4 w-4" /> WhatsApp us
+            <CalendarClock className="h-4 w-4" /> Book a call
           </a>
         )}
         <button
